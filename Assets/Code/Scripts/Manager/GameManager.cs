@@ -10,6 +10,8 @@ public class GameManager : MonoSingleton<GameManager> // 싱글톤 사용
     public PlayerController playerController;
     public PlayerStats playerStats;
 
+    [Header("게임 실행 중 플레이어 스텟값 수정")]
+    public PlayerStatsRuntime playerStatsRuntime;
 
     protected new void Awake()
     {
@@ -23,10 +25,8 @@ public class GameManager : MonoSingleton<GameManager> // 싱글톤 사용
         }
 
         base.Awake(); // MonoSingleton의 Awake 호출
-    }
 
-    private void Start()
-    {
-        playerStats.ResetStats();
+        playerStatsRuntime = new PlayerStatsRuntime();
+        playerStatsRuntime.CopyFrom(playerStats); // 스텟 값 복제
     }
 }

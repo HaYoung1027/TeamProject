@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // x 이동
-        float x = inputVec.x * GameManager.Instance.playerStats.speed * Time.deltaTime;
+        float speed = GameManager.Instance.playerStatsRuntime.speed;
+        float x = inputVec.x * speed * Time.deltaTime;
         transform.Translate(x, 0, 0);
 
         // 방향 플립

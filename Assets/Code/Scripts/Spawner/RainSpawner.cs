@@ -38,6 +38,7 @@ public class Rain : MonoBehaviour
             float sizeX = spawnerTransform.transform.localScale.x * 0.5f;
             Vector3 pos = new Vector3(Random.Range(-sizeX, sizeX), 0f, 0f);
             GameObject RainObj = GameManager.Instance.poolManager.SpawnFromPool("RainDrop", spawnerTransform.position + pos, Quaternion.identity);
+            GameManager.Instance.playerStatsRuntime.speed += 0.1f;
 
             yield return new WaitForSeconds(rainSpawnInterval);
         }    
