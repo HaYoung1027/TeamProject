@@ -52,8 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isGrounded) return;
 
-        rigid.linearVelocity = new Vector2(
-            rigid.linearVelocity.x, jumpForce);
+        rigid.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
         isGrounded = false;
     }
