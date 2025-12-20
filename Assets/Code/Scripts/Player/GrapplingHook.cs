@@ -16,6 +16,11 @@ public class GrapplingHook : MonoBehaviour
     public bool isAttach;
     public bool isEnemyAttach;
 
+    // 슬로우 효과 변수
+    public float slowFactor;    // 슬로우 비율
+    public float slowLength;    // 원래 속도로 복귀하는 데 걸리는 시간
+    Coroutine slowCoroutine;    // 슬로우 효과 코루틴
+
     public Vector3 enemyFollowOffset = Vector3.zero;
     private List<Transform> enemies = new List<Transform>();
     Rigidbody2D rb;
@@ -108,6 +113,12 @@ public class GrapplingHook : MonoBehaviour
                     StopCoroutine(gravityCoroutine);
 
                 gravityCoroutine = StartCoroutine(TempChangeGravity(0.2f, 0f, 1f));
+
+                // 슬로우 효과
+                if (slowCoroutine != null)
+                    StopCoroutine(slowCoroutine);
+
+                slowCoroutine = StartCoroutine(SlowRoutine());
             } 
         }
 
@@ -252,5 +263,25 @@ public class GrapplingHook : MonoBehaviour
         GameManager.Instance.playerStatsRuntime.speed = originalSpeed;
         gravityCoroutine = null;
         sprite.color = Color.white;
+    }
+    // 슬로우 효과 코루틴
+    IEnumerator SlowRoutine()
+    {
+        // 슬로우 적용
+        Time.timeScale = slowFactor;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+
+        // 서서히 원래 속도로 복귀
+        while (Time.timeScale < 1f)
+        {
+            Time.timeScale += (1f / slowLength) * Time.unscaledDeltaTime;
+            Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
+            Time.fixedDeltaTime = Time.timeScale * 0.02f;
+            yield return null;
+        }
+
+        // 오차 방지를 위해 기본값으로 복구
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
     }
 }
