@@ -26,6 +26,7 @@ public class GrapplingHook : MonoBehaviour
     private List<Transform> enemies = new List<Transform>();
     Rigidbody2D rb;
     SpriteRenderer sprite;
+    DistanceJoint2D hookJoint;
     bool isStopped = false;
 
     [SerializeField] Transform groundCheck;
@@ -51,6 +52,7 @@ public class GrapplingHook : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        hookJoint = hook.GetComponent<DistanceJoint2D>();
     }
     void Update()
     {
@@ -122,9 +124,16 @@ public class GrapplingHook : MonoBehaviour
 
                 slowCoroutine = StartCoroutine(SlowRoutine());
             }
+            if (Mouse.current.rightButton.isPressed) // 우클릭 꾹 눌렀을 때
+            {
+                if (hookJoint != null && hookJoint.enabled)
+                {
+                    hookJoint.distance = Mathf.Max(0.5f, hookJoint.distance - 0.1f); // 라인 점점 줄어들게
+                }
+            }
         }
 
-        else if (isEnemyAttach)
+        else if (isEnemyAttach) // 적 끌고오기
         {
             if (Mouse.current.leftButton.wasPressedThisFrame && enemies.Count > 0)
             {

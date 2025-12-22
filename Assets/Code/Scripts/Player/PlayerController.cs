@@ -34,13 +34,10 @@ public class PlayerController : MonoBehaviour, IDamageable
             float hookSwingForce = GameManager.Instance.playerStatsRuntime.hookSwingForce;
             rigid.AddForce(new Vector2(inputVec.x * hookSwingForce, 0f));
         }
-        else if (grappling.isAttach)
-        {
-            rigid.linearVelocity = new Vector2(0f, rigid.linearVelocityY);
-        }
         else // 일반 이동
         {
-            rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
+            float x = inputVec.x * speed * Time.deltaTime; // translate
+            transform.Translate(x, 0, 0);
         }
 
         // 방향 플립
