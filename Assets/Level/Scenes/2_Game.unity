@@ -19240,6 +19240,7 @@ GameObject:
   - component: {fileID: 733997519}
   - component: {fileID: 733997523}
   - component: {fileID: 733997524}
+  - component: {fileID: 733997525}
   m_Layer: 0
   m_Name: MovingEnemy
   m_TagString: Enemy
@@ -19374,7 +19375,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19441,6 +19442,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da319fc7f7b932741989639c6a8af631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+--- !u!114 &733997525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733997517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Elringus.SpriteGlow.Runtime::SpriteGlow.SpriteGlowEffect
+  glowColor: {r: 1, g: 1, b: 1, a: 1}
+  glowBrightness: 1
+  outlineWidth: 1
+  alphaThreshold: 0.01
+  drawOutside: 0
+  enableInstancing: 0
 --- !u!1 &754540130
 GameObject:
   m_ObjectHideFlags: 0
@@ -42123,6 +42142,7 @@ MonoBehaviour:
   startPos: {x: 14.95, y: 8.2, z: 0}
   maxTime: 2
   curTime: 0
+  aiming: {fileID: 0}
 --- !u!50 &1298111046
 Rigidbody2D:
   serializedVersion: 5
@@ -49275,6 +49295,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8628492ad07fa84996670a3e3d52c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hooking
+  maxClampDistance: 1.5
+  minDistanceLimit: 2
+  minClampDistance: 4.1
   joint2D: {fileID: 1914685230}
 --- !u!1 &1918118350
 GameObject:
