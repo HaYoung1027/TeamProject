@@ -11,6 +11,8 @@ TagManager:
   - NPC
   - ThrowingEnemy
   - EndPoint
+  - Canvas_screen
+  - Hook
   layers:
   - Default
   - TransparentFX

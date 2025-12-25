@@ -19454,7 +19454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Elringus.SpriteGlow.Runtime::SpriteGlow.SpriteGlowEffect
-  glowColor: {r: 1, g: 1, b: 1, a: 1}
+  glowColor: {r: 1, g: 0, b: 0, a: 1}
   glowBrightness: 1
   outlineWidth: 1
   alphaThreshold: 0.01
@@ -49120,11 +49120,11 @@ GameObject:
   - component: {fileID: 1914685235}
   m_Layer: 0
   m_Name: Hook
-  m_TagString: Untagged
+  m_TagString: Hook
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!232 &1914685230
 DistanceJoint2D:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ public class Hooking : MonoBehaviour
                 joint2D.distance = 7;
             }
 
-            if (joint2D.distance <= minDistanceLimit) // ÂªÀ» ¶§ ´Ã¸®±â
+            if (!GameManager.Instance.playerController.isGrounded && joint2D.distance <= minDistanceLimit) // ÂªÀ» ¶§ ´Ã¸®±â
             {
                 joint2D.distance = minClampDistance;
             }
