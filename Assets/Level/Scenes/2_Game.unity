@@ -49295,7 +49295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8628492ad07fa84996670a3e3d52c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hooking
-  maxClampDistance: 1.5
+  maxClampDistance: 2
   minDistanceLimit: 2
   minClampDistance: 4.1
   joint2D: {fileID: 1914685230}

@@ -121,7 +121,8 @@ public class GrapplingHook : MonoBehaviour
                 hasShakedOnAttach = true;
             }
 
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            // 마우스를 뗐을 때만 해제
+            if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
                 isAttach = false;
                 isHookActive = false;
@@ -137,11 +138,13 @@ public class GrapplingHook : MonoBehaviour
 
                 slowCoroutine = StartCoroutine(SlowRoutine());
             }
-            if (Mouse.current.rightButton.isPressed) // 우클릭 꾹 눌렀을 때
+
+            // 우클릭 줄 당기기 로직은 그대로 OK
+            if (Mouse.current.rightButton.isPressed)
             {
                 if (hookJoint != null && hookJoint.enabled)
                 {
-                    hookJoint.distance = Mathf.Max(0.5f, hookJoint.distance - 0.1f); // 라인 점점 줄어들게
+                    hookJoint.distance = Mathf.Max(0.5f, hookJoint.distance - 0.1f);
 
                     if (!isPlayedDraftSound)
                     {
@@ -150,6 +153,7 @@ public class GrapplingHook : MonoBehaviour
                     }
                 }
             }
+
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
                 GameManager.Instance.audioManager.StopSFX();

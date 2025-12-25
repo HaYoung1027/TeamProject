@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Hooking : MonoBehaviour
 {
-    [Header("빵에 닿았을 때 줄어드는 줄 거리")]
-    public float maxClampDistance;
     [Header("이하이면 보정")]
     public float minDistanceLimit;
     [Header("가까울 때 고정되는 거리")]
@@ -32,7 +30,7 @@ public class Hooking : MonoBehaviour
 
             if (GameManager.Instance.playerController.isGrounded == true)
             {
-                joint2D.distance -= maxClampDistance;
+                joint2D.distance -= joint2D.distance * 0.2f;
             }
 
             if (joint2D.distance <= minDistanceLimit)
