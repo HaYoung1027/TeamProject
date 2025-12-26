@@ -5,9 +5,12 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class GrapplingHook : MonoBehaviour
 {
+    public Volume globalVolume;
     public LineRenderer line;
     public Transform hook;
     private Vector2 mousedir;
@@ -16,29 +19,30 @@ public class GrapplingHook : MonoBehaviour
     public bool isLineMax;
     public bool isAttach;
     public bool isEnemyAttach;
-	public bool isSlowing;		// ���ο��� ������ ����
-    bool hasShakedOnAttach = false;
-    bool hasPlayedAttachSound = false;
-    bool isPlayedDraftSound = false;
-    bool hasPlayedShootSound = false;
-    bool hasAppliedHookForce = false;
+    public bool isSlowing;
+    private bool hasShakedOnAttach = false;
+    private bool hasPlayedAttachSound = false;
+    private bool isPlayedDraftSound = false;
+    private bool hasPlayedShootSound = false;
+    private bool hasAppliedHookForce = false;
 
     // 슬로우 효과 변수
     public float slowFactor;    // 슬로우 비율
     public float slowLength;    // 원래 속도로 복귀하는 데 걸리는 시간
-    Coroutine slowCoroutine;    // 슬로우 효과 코루틴
+    private Coroutine slowCoroutine;    // 슬로우 효과 코루틴
 
     public Vector3 enemyFollowOffset = Vector3.zero;
     private List<Transform> enemies = new List<Transform>();
-    Rigidbody2D rb;
-    SpriteRenderer sprite;
-    DistanceJoint2D hookJoint;
-    bool isStopped = false;
+    private Rigidbody2D rb;
+    private SpriteRenderer sprite;
+    private DistanceJoint2D hookJoint;
+    private bool isStopped = false;
 
 	PlayerController player;    // 플레이어
 
     public SwingBoostController swingBoostController;
 
+    ColorAdjustments colorAdjustments;
     private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
@@ -61,7 +65,18 @@ public class GrapplingHook : MonoBehaviour
         hook.gameObject.SetActive(false);
 
 		hookJoint = hook.GetComponent<DistanceJoint2D>();
-	}
+
+        if (globalVolume == null)
+        {
+            Debug.LogError("❌ Global Volume이 할당되지 않았음");
+            return;
+        }
+
+        if (!globalVolume.profile.TryGet(out colorAdjustments))
+        {
+            Debug.LogError("❌ ColorAdjustments가 Volume Profile에 없음");
+        }
+    }
     void Update()
     {
         line.SetPosition(0, transform.position);
@@ -295,35 +310,36 @@ public class GrapplingHook : MonoBehaviour
         hook.gameObject.SetActive(false);
     }
 
-	// 슬로우 효과 코루틴
-	IEnumerator SlowRoutine()
-	{
-		// 슬로우 적용
-		sprite.color = Color.red;
-		Time.timeScale = slowFactor;
-		Time.fixedDeltaTime = 0.02f * Time.timeScale;
+    // 슬로우 효과 코루틴
+    IEnumerator SlowRoutine()
+    {
+        sprite.color = Color.red;
 
-		float elapsed = 0f;
+        if (colorAdjustments != null)
+            colorAdjustments.saturation.value = -50f;
 
-		while (elapsed < slowLength)
-		{
-			// 플레이어가 땅에 닿거나 그래플링 훅을 다시 사용하거나 몬스터를 잡을 경우 즉시 종료
-			if (player.isGrounded || isAttach || isEnemyAttach)
-			{
-				Debug.Log("슬로우모션 종료");
-				Debug.Log("isGrounded: " + player.isGrounded + ", isAttach: " + isAttach + ", isEnemyAttach: " + isEnemyAttach);
-				break;
-			}
+        Time.timeScale = slowFactor;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
 
-			elapsed += Time.unscaledDeltaTime;
-			yield return null;
-		}
+        float elapsed = 0f;
 
-		// 복구
-		Time.timeScale = 1f;
-		Time.fixedDeltaTime = 0.02f;
-		sprite.color = Color.white;
-	}
+        while (elapsed < slowLength)
+        {
+            if (player.isGrounded || isAttach || isEnemyAttach)
+                break;
+
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+        sprite.color = Color.white;
+
+        if (colorAdjustments != null)
+            colorAdjustments.saturation.value = 0f;
+    }
+
 
     // 힘 주기
     public void ApplyHookImpulse(Vector2 hookPos)
