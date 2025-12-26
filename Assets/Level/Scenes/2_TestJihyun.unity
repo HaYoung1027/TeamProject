@@ -1305,7 +1305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
   m_Actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
+  m_UIInputModule: {fileID: 509401722}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1360,7 +1360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96080ce099ea71e4088789d1539497b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hook
-  globalVolume: {fileID: 0}
+  globalVolume: {fileID: 1383601349}
   line: {fileID: 1762199177}
   hook: {fileID: 1914685234}
   isHookActive: 0
@@ -21034,6 +21034,7 @@ MonoBehaviour:
     hookDistance: 0
     hookSwingForce: 0
     hookEnemyThrowForce: 0
+    maxSwingSpeed: 0
   enemyStatsRuntime:
     attack: 0
     maxHP: 0
@@ -49975,7 +49976,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: fa00e3d763d5854429c4c1dd75e19ae8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -41,10 +41,11 @@ public class CursorPathMarking : MonoBehaviour
 		// 자기 위치에서 dir 방향으로 광선 발사
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);
 
-		// 훅 사용 중일 경우 선 비활성화
-		if(hook.isAttach)
+		// 훅 사용 중이거나 몬스터를 잡고 있을 경우 선 비활성화
+		if(hook.isAttach || hook.isEnemyAttach)
 		{
 			visualizerLine.Stop();
+			return;
 		}
 
 		// 광선에 부딪히는 오브젝트가 있으면 선 활성화
