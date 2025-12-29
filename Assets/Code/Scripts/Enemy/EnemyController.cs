@@ -96,12 +96,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 
 	}
 
-	// 한 프레임 쉬었다 실행
-	//IEnumerator ApplyStateNextFrame()
-	//{
-	//	yield return null; // 다음 프레임까지 대기
-	//}
-
 	// 적 데미지 입히기
 	void IDamageable.TakeDamage(int attack)
 	{

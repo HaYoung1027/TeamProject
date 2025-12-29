@@ -100,6 +100,7 @@ public class GrapplingHook : MonoBehaviour
 			mousedir = mouseWorldPos - transform.position;
 			isHookActive = true;
 			hook.gameObject.SetActive(true);
+			line.enabled = true;
 		}
 
 		// 훅이 발사된 상태이고, 아직 최대 사거리에 도달하지 않았을 때
@@ -134,7 +135,7 @@ public class GrapplingHook : MonoBehaviour
 			}
 		}
 
-		if (isAttach)
+		else if (isAttach)
 		{
 			if (!hasShakedOnAttach)
 			{
@@ -221,7 +222,7 @@ public class GrapplingHook : MonoBehaviour
 
 	void LateUpdate()
 	{
-		//if (!isEnemyAttach) return;
+		if (!isEnemyAttach) return;
 
 		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();
 		for (int i = 0; i < enemies.Count; i++)
@@ -237,7 +238,7 @@ public class GrapplingHook : MonoBehaviour
 
 	public void AttachEnemy(Transform enemy)
 	{
-		if (enemies.Contains(enemy)) return;
+		if (enemies.Contains(enemy) || isEnemyAttach) return;
 
 		enemies.Add(enemy);
 
@@ -268,12 +269,12 @@ public class GrapplingHook : MonoBehaviour
 		enemy.localPosition = offset;
 
 		// 훅 & 줄 숨기기
-		//hook.gameObject.SetActive(false);
-		//line.enabled = false;
+		hook.gameObject.SetActive(false);
+		line.enabled = false;
 
 		isEnemyAttach = true;
 		isAttach = false;
-		//isHookActive = false;
+		isHookActive = false;
 		isLineMax = false;
 	}
 
