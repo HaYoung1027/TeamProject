@@ -20,8 +20,8 @@ public class PlayerStats : ScriptableObject
     public float hookDistance;
     [Header("갈고리 중 좌우 속도")]
     public float hookSwingForce;
-    [Header("갈고리 몹 던지는 힘")]
-    public float hookEnemyThrowForce;
+    [Header("갈고리 던지는 힘")]
+    public float hookThrowForce;
 
     [Header("갈고리 중 최대 속도")]
     public float maxSwingSpeed;

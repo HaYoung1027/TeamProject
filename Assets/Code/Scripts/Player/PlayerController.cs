@@ -92,7 +92,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 				contact.point.y < transform.position.y)
 			{
 				isGrounded = true;
-                rigid.linearVelocity = new Vector2(0f, rigid.linearVelocityY);
 				break;
 			}
 		}
@@ -100,12 +99,13 @@ public class PlayerController : MonoBehaviour, IDamageable
         // 충돌 체크
         hasCollided = true;
 
-        //if (isGrounded && rigid.linearVelocityY < 0f)
-        //{
-        //	rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
-        //}
+		// y값 보정 (바닥 뚫림 방지)
+		if (isGrounded && rigid.linearVelocityY < 0f)
+		{
+			rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
+		}
 
-    }
+	}
 
 
 	void OnMove(InputValue value)

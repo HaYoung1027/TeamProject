@@ -66,8 +66,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
 		if (other.gameObject.CompareTag("Player"))
 		{
-			//state = EnemyState.Thrown;
-			transform.gameObject.tag = throwingEnemyStr;
+			transform.gameObject.tag = enemyStr;
 		}
 		else if(other.gameObject.CompareTag("Ceiling"))
 		{
@@ -80,15 +79,15 @@ public class EnemyController : MonoBehaviour, IDamageable
 			transform.gameObject.tag = throwingEnemyStr;
 		}
 
-		// 던져지는 몬스터나 오브젝트에게 닿았을 경우
-		if (other.gameObject.CompareTag(throwingEnemyStr) || other.gameObject.CompareTag("Object"))
+		// 몬스터 태그가 Enemy일 때 던져지는 몬스터나 오브젝트에게 닿았을 경우
+		if (transform.gameObject.CompareTag(enemyStr) && (other.gameObject.CompareTag(throwingEnemyStr) || other.gameObject.CompareTag("Object")))
 		{
 			// 몬스터 데미지 입히기
 			damageable.TakeDamage(1);
 		}
 
 		// 몬스터의 태그가 ThrowingEnemy일 때 몬스터에게 닿았을 경우
-		if (transform.gameObject.tag == throwingEnemyStr && other.gameObject.CompareTag("Enemy"))
+		if (transform.gameObject.CompareTag(throwingEnemyStr) && other.gameObject.CompareTag(enemyStr))
 		{
 			// 던져지는 몬스터 데미지 입히기
 			damageable.TakeDamage(1);

@@ -9,10 +9,10 @@ TagManager:
   - Enemy
   - Object
   - NPC
-  - ThrowingEnemy
   - EndPoint
   - Canvas_screen
   - Hook
+  - ThrowingEnemy
   layers:
   - Default
   - TransparentFX

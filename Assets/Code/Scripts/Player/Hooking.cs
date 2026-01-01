@@ -49,9 +49,16 @@ public class Hooking : MonoBehaviour
             grappling.isHookActive = false;
             grappling.isLineMax = false;
         }
+
+		// 몬스터 잡기
         if (collision.CompareTag("Enemy") || collision.CompareTag("ThrowingEnemy"))
         {
             grappling.AttachEnemy(collision.transform);
-        }
-    }
+		}
+		// 오브젝트 잡기
+		else if (collision.CompareTag("Object"))
+		{
+			grappling.AttachObject(collision.transform);
+		}
+	}
 }

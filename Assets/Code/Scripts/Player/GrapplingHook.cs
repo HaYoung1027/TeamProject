@@ -16,10 +16,11 @@ public class GrapplingHook : MonoBehaviour
 	private Vector2 mousedir;
 
 	public bool isHookActive;
-	public bool isLineMax;
-	public bool isAttach;
-	public bool isEnemyAttach;
-	public bool isSlowing;
+	public bool isLineMax;		// 그래플링 훅 길이가 최대인지
+	public bool isAttach;		// 그래플링 훅 사용 중인지 여부
+	public bool isEnemyAttach;  // 적 잡고 있는 중인지 여부
+	public bool isObjAttach;	// 오브젝트 잡고 있는 중인지 여부
+	public bool isSlowing;		// 슬로우모션 여부
 	private bool hasShakedOnAttach = false;
 	private bool hasPlayedAttachSound = false;
 	private bool isPlayedDraftSound = false;
@@ -31,9 +32,15 @@ public class GrapplingHook : MonoBehaviour
 	public float slowLength;    // 원래 속도로 복귀하는 데 걸리는 시간
 	private Coroutine slowCoroutine;    // 슬로우 효과 코루틴
 
+	// 적
 	public Vector3 enemyFollowOffset = Vector3.zero;
 	private List<Transform> enemies = new List<Transform>();
-	private Rigidbody2D rb;
+
+	// 오브젝트
+	public Vector3 objFollowOffset = Vector3.zero;
+	private List<Transform> objs = new List<Transform>();
+
+	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
 	private DistanceJoint2D hookJoint;
 	private bool isStopped = false;
@@ -45,7 +52,7 @@ public class GrapplingHook : MonoBehaviour
 	ColorAdjustments colorAdjustments;
 	private void Awake()
 	{
-		rb = GetComponent<Rigidbody2D>();
+		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
 		player = GetComponent<PlayerController>();
 		swingBoostController = GetComponent<SwingBoostController>();
@@ -83,7 +90,7 @@ public class GrapplingHook : MonoBehaviour
 		line.SetPosition(1, hook.position);
 
 		// 갈고리 or 적에 처음 붙었을 때
-		if ((isAttach || isEnemyAttach) && !hasPlayedAttachSound)
+		if ((isAttach || isEnemyAttach || isObjAttach) && !hasPlayedAttachSound)
 		{
 			GameManager.Instance.audioManager.HookAttachSound(1f);
 			hasPlayedAttachSound = true;
@@ -215,12 +222,31 @@ public class GrapplingHook : MonoBehaviour
 
 				Vector2 dir = mouseWorld - (Vector2)transform.position;
 
-				ThrowEnemy(enemies[0], dir, GameManager.Instance.playerStatsRuntime.hookEnemyThrowForce);
+				ThrowEnemy(enemies[0], dir, GameManager.Instance.playerStatsRuntime.hookThrowForce);
+			}
+		}
+		// 오브젝트 던지기
+		else if (isObjAttach)
+		{
+			if (Mouse.current.rightButton.wasPressedThisFrame && objs.Count > 0 && objs.Count > 0)
+			{
+				Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+
+				Vector2 dir = mouseWorld - (Vector2)transform.position;
+
+				ThrowObject(objs[0], dir, GameManager.Instance.playerStatsRuntime.hookThrowForce);
 			}
 		}
 	}
 
 	void LateUpdate()
+	{
+		MoveEnemyPos();
+		MoveObjPos();
+	}
+
+	// 적 위치 이동하기 (그래플링 훅으로 잡았을 경우만)
+	void MoveEnemyPos()
 	{
 		if (!isEnemyAttach) return;
 
@@ -236,9 +262,27 @@ public class GrapplingHook : MonoBehaviour
 		}
 	}
 
+	// 오브젝트 위치 이동하기 (그래플링 훅으로 잡았을 경우만)
+	void MoveObjPos()
+	{
+		if (!isObjAttach) return;
+
+		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();
+		for (int i = 0; i < objs.Count; i++)
+		{
+			if (objs[i] == null) continue;
+
+			Vector3 offset = objFollowOffset;
+			offset.x = playerSprite.flipX ? -Mathf.Abs(objFollowOffset.x) : Mathf.Abs(objFollowOffset.x);
+
+			objs[i].localPosition = offset; // 부모 transform 기준 localPosition
+		}
+	}
+
+	// 적 잡기
 	public void AttachEnemy(Transform enemy)
 	{
-		if (enemies.Contains(enemy) || isEnemyAttach) return;
+		if (enemies.Contains(enemy) || isEnemyAttach || isObjAttach) return;
 
 		enemies.Add(enemy);
 
@@ -314,7 +358,92 @@ public class GrapplingHook : MonoBehaviour
 		line.enabled = true;
 
 		// 훅 상태 초기화
-		//isHookActive = false;
+		isHookActive = false;
+		isLineMax = false;
+		hook.GetComponent<Hooking>().joint2D.enabled = false;
+		hook.gameObject.SetActive(false);
+	}
+
+	// 오브젝트 잡기
+	public void AttachObject(Transform obj)
+	{
+		if (objs.Contains(obj) || isObjAttach || isEnemyAttach) return;
+
+		objs.Add(obj);
+
+		Collider2D objCol = obj.GetComponent<Collider2D>();
+		Collider2D playerCol = GetComponent<Collider2D>();
+
+		if (objCol != null && objCol != null)
+			Physics2D.IgnoreCollision(objCol, playerCol, true);
+
+		// Rigidbody가 있으면 Kinematic으로
+		Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+		if (rb != null)
+			rb.bodyType = RigidbodyType2D.Kinematic;
+
+		// 플레이어 자식으로
+		obj.SetParent(transform);
+
+		if (objCol != null)
+			objCol.enabled = false;
+
+		// 플레이어 SpriteRenderer 가져오기
+		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();
+
+		// objFollowOffset 기준으로 x를 왼쪽/오른쪽 맞춤
+		Vector3 offset = objFollowOffset;
+		offset.x = playerSprite.flipX ? -Mathf.Abs(objFollowOffset.x) : Mathf.Abs(objFollowOffset.x);
+
+		obj.localPosition = offset;
+
+		// 훅 & 줄 숨기기
+		hook.gameObject.SetActive(false);
+		line.enabled = false;
+
+		isObjAttach = true;
+		isAttach = false;
+		isHookActive = false;
+		isLineMax = false;
+	}
+
+	// 오브젝트 던지기
+	public void ThrowObject(Transform obj, Vector2 throwDir, float throwForce)
+	{
+		Collider2D objCol = obj.GetComponent<Collider2D>();
+		Collider2D playerCol = GetComponent<Collider2D>();
+
+		if (!objs.Contains(obj)) return;
+
+		GameManager.Instance.audioManager.HookThrowEnemySound(1f); // 적 던지는 효과음
+
+		if (objCol != null)
+			objCol.enabled = true;
+
+		objs.Remove(obj);
+
+		// 부모 해제
+		obj.SetParent(null);
+
+		// Rigidbody 처리
+		Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+		if (rb != null)
+		{
+			rb.bodyType = RigidbodyType2D.Dynamic;
+			rb.linearVelocity = Vector2.zero;
+			rb.AddForce(throwDir.normalized * throwForce, ForceMode2D.Impulse);
+		}
+
+		if (objs.Count == 0)
+		{
+			isObjAttach = false;
+			hasPlayedAttachSound = false;
+		}
+
+		line.enabled = true;
+
+		// 훅 상태 초기화
+		isHookActive = false;
 		isLineMax = false;
 		hook.GetComponent<Hooking>().joint2D.enabled = false;
 		hook.gameObject.SetActive(false);
@@ -350,7 +479,6 @@ public class GrapplingHook : MonoBehaviour
 			colorAdjustments.saturation.value = 0f;
 	}
 
-
 	// 힘 주기
 	public void ApplyHookImpulse(Vector2 hookPos)
 	{
@@ -359,6 +487,6 @@ public class GrapplingHook : MonoBehaviour
 		float horizontal = dir.x > 0 ? 1f : -1f;
 		float power = 3f; // 힘 세기
 
-		rb.AddForce(new Vector2(horizontal * power, 1.2f), ForceMode2D.Impulse);
+		rigid.AddForce(new Vector2(horizontal * power, 1.2f), ForceMode2D.Impulse);
 	}
 }
