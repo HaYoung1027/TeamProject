@@ -27,8 +27,8 @@ public class GrapplingHook : MonoBehaviour
 	private bool hasPlayedShootSound = false;
 	private bool hasAppliedHookForce = false;
 
-	// 슬로우 효과 변수
-	public float slowFactor;    // 슬로우 비율
+    // 슬로우 효과 변수
+    public float slowFactor;    // 슬로우 비율
 	public float slowLength;    // 원래 속도로 복귀하는 데 걸리는 시간
 	private Coroutine slowCoroutine;    // 슬로우 효과 코루틴
 
@@ -142,7 +142,7 @@ public class GrapplingHook : MonoBehaviour
 			}
 		}
 
-		else if (isAttach)
+        else if (isAttach)
 		{
 			if (!hasShakedOnAttach)
 			{

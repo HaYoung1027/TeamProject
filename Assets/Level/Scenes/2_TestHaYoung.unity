@@ -1370,10 +1370,13 @@ MonoBehaviour:
   isLineMax: 0
   isAttach: 0
   isEnemyAttach: 0
+  isObjAttach: 0
   isSlowing: 0
+  minHookLength: 2
   slowFactor: 0.5
   slowLength: 2
   enemyFollowOffset: {x: 1, y: 0, z: 0}
+  objFollowOffset: {x: 0, y: 0, z: 0}
   swingBoostController: {fileID: 0}
 --- !u!114 &156809795
 MonoBehaviour:
@@ -20273,6 +20276,7 @@ MonoBehaviour:
   bgmSource: {fileID: 1207965721}
   sfxSource: {fileID: 1169761309}
   playerJump: {fileID: 8300000, guid: 961a135e7c1a0bb4f8f732686841b7a5, type: 3}
+  playerWalk: {fileID: 0}
   hookAttach: {fileID: 8300000, guid: 723251075cda21e4e82b4b82d0d25156, type: 3}
   hookDraft: {fileID: 8300000, guid: 0056bba062b850442a3ea463858dbeeb, type: 3}
   hookShoot: {fileID: 8300000, guid: 88699f601e27fe244b2c0b0b4240c5ac, type: 3}
@@ -21187,7 +21191,7 @@ MonoBehaviour:
     hookSpeed: 0
     hookDistance: 0
     hookSwingForce: 0
-    hookEnemyThrowForce: 0
+    hookThrowForce: 0
     maxSwingSpeed: 0
   enemyStatsRuntime:
     attack: 0

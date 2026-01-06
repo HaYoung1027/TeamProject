@@ -12,6 +12,8 @@ public class Hooking : MonoBehaviour
 
     private Transform hookedEnemy;
 
+    public float minHookLength = 2.0f;   // 최소 그래플 길이
+
     void Start()
     {
         grappling = GameObject.Find("Player").GetComponent<GrapplingHook>();
@@ -45,12 +47,16 @@ public class Hooking : MonoBehaviour
 
             grappling.ApplyHookImpulse(transform.position); // 힘 주기
 
-			grappling.isAttach = true;
+            grappling.isAttach = true;
             grappling.isHookActive = false;
             grappling.isLineMax = false;
+
+            // 갈고리가 벽에 박히는 순간 벽과 플레이어 거리가 너무 가깝다면 길이 보정
+            if (joint2D.distance < minHookLength)
+                joint2D.distance = minHookLength;
         }
 
-		// 몬스터 잡기
+        // 몬스터 잡기
         if (collision.CompareTag("Enemy") || collision.CompareTag("ThrowingEnemy"))
         {
             grappling.AttachEnemy(collision.transform);

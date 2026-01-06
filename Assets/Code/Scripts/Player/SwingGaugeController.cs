@@ -38,7 +38,8 @@ public class SwingGaugeController : MonoBehaviour
         {
             bool noInput = player.inputVec == Vector2.zero;
 
-            swingGauge.gameObject.SetActive(true);  // 게이지 UI 활성화
+            if(swingGauge.value > 0.25f)
+                swingGauge.gameObject.SetActive(true);  // 게이지 UI 활성화
 
             Vector2 hookPos = hook.position;        // 갈고리(회전 중심) 좌표
             Vector2 playerPos = transform.position; // 플레이어 좌표
