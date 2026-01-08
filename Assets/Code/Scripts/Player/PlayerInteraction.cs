@@ -3,13 +3,13 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    DialogManager currentDialog;
+    DialogSystem currentDialog;
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("NPC"))
         {
-            currentDialog = other.GetComponent<DialogManager>();
+            currentDialog = other.GetComponent<DialogSystem>();
         }
     }
 

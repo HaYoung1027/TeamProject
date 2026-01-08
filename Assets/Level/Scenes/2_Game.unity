@@ -19212,10 +19212,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogManager
   talkPanel: {fileID: 1449326991}
   talkText: {fileID: 499749626}
-  shakeAmount: 0.01
-  shakeSpeed: 10
-  dialogText: "AD\uB97C| \uB20C\uB7EC| \uC774\uB3D9\nSPACE\uB97C||| \uB20C\uB7EC||||||||
-    \uC810\uD504"
+  waveText: 1
+  WaveAmount: 0.01
+  waveSpeed: 15
+  shakeText: 1
+  shakeAmount: 0.07
+  shakeSpeed: 15
+  sizeUpMultiplier: 1.3
+  dialogList:
+  - "AD\uB97C \uB20C\uB7EC \uC88C\uC6B0 \uC774\uB3D9\nSPACE\uB97C \uB20C\uB7EC \uC810\uD504"
+  - "\u314C\u3147\u3141\u3134\u3147\u3134\u3141\u3147\u3141"
   typingSpeed: 0.05
   isAction: 0
 --- !u!212 &678147089
@@ -20221,9 +20227,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogManager
   talkPanel: {fileID: 515005634}
   talkText: {fileID: 339037456}
-  shakeAmount: 2
-  shakeSpeed: 15
-  dialogText: 
+  waveText: 0
+  WaveAmount: 2
+  waveSpeed: 15
+  shakeText: 0
+  shakeAmount: 0.5
+  shakeSpeed: 25
+  sizeUpMultiplier: 1.2
+  dialogList: []
   typingSpeed: 0.05
   isAction: 0
 --- !u!1 &797696474
@@ -42161,9 +42172,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogManager
   talkPanel: {fileID: 515005634}
   talkText: {fileID: 339037456}
-  shakeAmount: 2
-  shakeSpeed: 15
-  dialogText: 
+  waveText: 0
+  WaveAmount: 2
+  waveSpeed: 15
+  shakeText: 0
+  shakeAmount: 0.5
+  shakeSpeed: 25
+  sizeUpMultiplier: 1.2
+  dialogList: []
   typingSpeed: 0.05
   isAction: 0
 --- !u!1 &1169761308
@@ -50327,6 +50343,7 @@ MonoBehaviour:
   minDistanceLimit: 2
   minClampDistance: 4.1
   joint2D: {fileID: 1914685230}
+  minHookLength: 2
 --- !u!1 &1918118350
 GameObject:
   m_ObjectHideFlags: 0
