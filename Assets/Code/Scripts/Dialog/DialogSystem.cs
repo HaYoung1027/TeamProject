@@ -14,19 +14,19 @@ public class DialogSystem : MonoBehaviour
     [Header("텍스트 웨이브")]
     public bool waveText = false;
     [Header("웨이브 세기")]
-    public float WaveAmount = 2f;
+    public float WaveAmount = 0.01f;
     [Header("웨이브 속도")]
     public float waveSpeed = 15f;
 
     [Header("미세 흔들림")]
     public bool shakeText = false;
     [Header("흔들림 세기")]
-    public float shakeAmount = 0.5f;
+    public float shakeAmount = 0.07f;
     [Header("흔들림 속도")]
-    public float shakeSpeed = 25f;
+    public float shakeSpeed = 15f;
 
     [Header("폰트 크기 연출")]
-    public float sizeUpMultiplier = 1.2f;
+    public float sizeUpMultiplier = 1.3f;
     List<bool> bigCharStates = new List<bool>();
     bool isBigMode = false;
 
@@ -49,6 +49,7 @@ public class DialogSystem : MonoBehaviour
     {
         if (!isAction) return;
 
+        // 스킵 버튼
         if (Keyboard.current != null &&
             Keyboard.current.qKey.wasPressedThisFrame)
         {
