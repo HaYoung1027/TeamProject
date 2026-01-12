@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -8,6 +9,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
+using tagName = Globals.TagName;
+
 public class GrapplingHook : MonoBehaviour
 {
 	public Volume globalVolume;
@@ -16,11 +19,10 @@ public class GrapplingHook : MonoBehaviour
 	private Vector2 mousedir;
 
 	public bool isHookActive;
-	public bool isLineMax;		// 그래플링 훅 길이가 최대인지
-	public bool isAttach;		// 그래플링 훅 사용 중인지 여부
-	public bool isEnemyAttach;  // 적 잡고 있는 중인지 여부
-	public bool isObjAttach;	// 오브젝트 잡고 있는 중인지 여부
-	public bool isSlowing;		// 슬로우모션 여부
+	public bool isLineMax;			// 그래플링 훅 길이가 최대인지
+	public bool isAttach;			// 그래플링 훅 사용 중인지 여부
+	public bool isAttachElement;	// 그래플링 훅으로 무언가를 잡았는지 여부
+	public bool isSlowing;			// 슬로우모션 여부
 	private bool hasShakedOnAttach = false;
 	private bool hasPlayedAttachSound = false;
 	private bool isPlayedDraftSound = false;
@@ -32,14 +34,6 @@ public class GrapplingHook : MonoBehaviour
 	public float slowLength;    // 원래 속도로 복귀하는 데 걸리는 시간
 	private Coroutine slowCoroutine;    // 슬로우 효과 코루틴
 
-	// 적
-	public Vector3 enemyFollowOffset = Vector3.zero;
-	private List<Transform> enemies = new List<Transform>();
-
-	// 오브젝트
-	public Vector3 objFollowOffset = Vector3.zero;
-	private List<Transform> objs = new List<Transform>();
-
 	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
 	private DistanceJoint2D hookJoint;
@@ -48,8 +42,12 @@ public class GrapplingHook : MonoBehaviour
 	PlayerController player;    // 플레이어
 
 	public SwingBoostController swingBoostController;
-
+	
 	ColorAdjustments colorAdjustments;
+
+	List<Transform> hookingList = new List<Transform>();    // 그래플링 훅으로 잡은 요소 리스트
+	Vector3 followOffset = Vector3.zero;
+
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
@@ -90,7 +88,7 @@ public class GrapplingHook : MonoBehaviour
 		line.SetPosition(1, hook.position);
 
 		// 갈고리 or 적에 처음 붙었을 때
-		if ((isAttach || isEnemyAttach || isObjAttach) && !hasPlayedAttachSound)
+		if ((isAttach || isAttachElement) && !hasPlayedAttachSound)
 		{
 			GameManager.Instance.audioManager.HookAttachSound(1f);
 			hasPlayedAttachSound = true;
@@ -213,236 +211,136 @@ public class GrapplingHook : MonoBehaviour
 			}
 		}
 
-		// 적 던지기
-		if (isEnemyAttach)
+		// 적 또는 오브젝트 던지기
+		if (isAttachElement)
 		{
-			if (Mouse.current.rightButton.wasPressedThisFrame && enemies.Count > 0)
+			if (Mouse.current.rightButton.wasPressedThisFrame)
 			{
 				Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
 				Vector2 dir = mouseWorld - (Vector2)transform.position;
 
-				ThrowEnemy(enemies[0], dir, GameManager.Instance.playerStatsRuntime.hookThrowForce);
-			}
-		}
-		// 오브젝트 던지기
-		else if (isObjAttach)
-		{
-			if (Mouse.current.rightButton.wasPressedThisFrame && objs.Count > 0 && objs.Count > 0)
-			{
-				Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+				ThrowElement(hookingList[0], dir);
 
-				Vector2 dir = mouseWorld - (Vector2)transform.position;
+				line.enabled = true;
 
-				ThrowObject(objs[0], dir, GameManager.Instance.playerStatsRuntime.hookThrowForce);
+				// 훅 상태 초기화
+				resetHook();
 			}
 		}
 	}
 
 	void LateUpdate()
 	{
-		MoveEnemyPos();
-		MoveObjPos();
+		MoveElementPos();
 	}
 
-	// 적 위치 이동하기 (그래플링 훅으로 잡았을 경우만)
-	void MoveEnemyPos()
+	// 적 및 오브젝트 위치 이동하기
+	void MoveElementPos()
 	{
-		if (!isEnemyAttach) return;
+		if (!isAttachElement) return;
 
-		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();
-		for (int i = 0; i < enemies.Count; i++)
-		{
-			if (enemies[i] == null) continue;
-
-			Vector3 offset = enemyFollowOffset;
-			offset.x = playerSprite.flipX ? -Mathf.Abs(enemyFollowOffset.x) : Mathf.Abs(enemyFollowOffset.x);
-
-			enemies[i].localPosition = offset; // 부모 transform 기준 localPosition
-		}
+		MovePos();
 	}
 
-	// 오브젝트 위치 이동하기 (그래플링 훅으로 잡았을 경우만)
-	void MoveObjPos()
+	// 잡기
+	public void AttachElement(Transform element)
 	{
-		if (!isObjAttach) return;
+		if (hookingList.Contains(element) || isAttachElement) return;
 
-		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();
-		for (int i = 0; i < objs.Count; i++)
-		{
-			if (objs[i] == null) continue;
+		hookingList.Add(element);	// 리스트에 추가하기
 
-			Vector3 offset = objFollowOffset;
-			offset.x = playerSprite.flipX ? -Mathf.Abs(objFollowOffset.x) : Mathf.Abs(objFollowOffset.x);
-
-			objs[i].localPosition = offset; // 부모 transform 기준 localPosition
-		}
-	}
-
-	// 적 잡기
-	public void AttachEnemy(Transform enemy)
-	{
-		if (enemies.Contains(enemy) || isEnemyAttach || isObjAttach) return;
-
-		enemies.Add(enemy);
-
-		Collider2D enemyCol = enemy.GetComponent<Collider2D>();
+		Collider2D elementCol = element.GetComponent<Collider2D>();
 		Collider2D playerCol = GetComponent<Collider2D>();
 
-		if (enemyCol != null && playerCol != null)
-			Physics2D.IgnoreCollision(enemyCol, playerCol, true);
+		// 플레이어가 자기 자신을 잡았을 때 -> 충돌 무시
+		if(elementCol != null && playerCol != null)
+			Physics2D.IgnoreCollision(elementCol, playerCol, true);
 
 		// Rigidbody가 있으면 Kinematic으로
-		Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+		Rigidbody2D rb = element.GetComponent<Rigidbody2D>();
 		if (rb != null)
 			rb.bodyType = RigidbodyType2D.Kinematic;
 
-		// 플레이어 자식으로
-		enemy.SetParent(transform);
+		element.SetParent(transform);
 
-		if (enemyCol != null)
-			enemyCol.enabled = false;
+		//if (transformCol != null)
+		//	transformCol.enabled = false;
 
-		// 플레이어 SpriteRenderer 가져오기
+		// 훅에 있는 플레이어 SpriteRenderer 가져오기
+		SpriteRenderer playerSprite = hook.GetComponent<SpriteRenderer>();
+
+		// followOffset을 기준으로 x를 왼쪽/오른쪽 방향 맞춤
+		Vector3 offset = followOffset;
+		offset.x = playerSprite.flipX ? -Mathf.Abs(followOffset.x) : Mathf.Abs(followOffset.x);
+
+		element.localPosition = offset;
+
+		disableHook();  // 훅 & 줄 숨기기
+		isAttachElement = true;    // 잡힘
+	}
+
+	// 던지기
+	public void ThrowElement(Transform element, Vector2 throwDir)
+	{
+		if (!hookingList.Contains(element)) return;
+
+		GameManager.Instance.audioManager.HookThrowEnemySound(1f); // 적 던지는 효과음
+		hookingList.Remove(element);
+
+		// 부모 해제
+		element.SetParent(null);
+
+		Collider2D enemyCol = element.GetComponent<Collider2D>();
+		Collider2D playerCol = GetComponent<Collider2D>();
+
+		// Rigidbody 처리
+		Rigidbody2D rb = element.GetComponent<Rigidbody2D>();
+		if (rb != null)
+		{
+			rb.bodyType = RigidbodyType2D.Dynamic;
+			rb.linearVelocity = Vector2.zero;
+			rb.AddForce(throwDir.normalized * GameManager.Instance.playerStatsRuntime.hookThrowForce, ForceMode2D.Impulse);
+		}
+
+		if (hookingList.Count == 0)
+		{
+			isAttachElement = false;
+			hasPlayedAttachSound = false;
+		}
+	}
+
+	// 위치 이동하기(그래플링 훅으로 잡았을 경우만)
+	public void MovePos()
+	{
+		if (!isAttachElement) return;
+
 		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();
+		for (int i = 0; i < hookingList.Count; i++)
+		{
+			if (hookingList[i] == null) continue;
 
-		// enemyFollowOffset 기준으로 x를 왼쪽/오른쪽 맞춤
-		Vector3 offset = enemyFollowOffset;
-		offset.x = playerSprite.flipX ? -Mathf.Abs(enemyFollowOffset.x) : Mathf.Abs(enemyFollowOffset.x);
+			Vector3 offset = followOffset;
+			offset.x = playerSprite.flipX ? -Mathf.Abs(followOffset.x) : Mathf.Abs(followOffset.x);
 
-		enemy.localPosition = offset;
+			hookingList[i].localPosition = offset; // 부모 transform 기준 localPosition
+		}
+	}
 
-		// 훅 & 줄 숨기기
+	// 훅 & 줄 숨기기
+	public void disableHook()
+	{
 		hook.gameObject.SetActive(false);
 		line.enabled = false;
 
-		isEnemyAttach = true;
 		isAttach = false;
 		isHookActive = false;
 		isLineMax = false;
 	}
 
-	// 적 던지기
-	public void ThrowEnemy(Transform enemy, Vector2 throwDir, float throwForce)
+	// 훅 상태 초기화
+	public void resetHook()
 	{
-		Collider2D enemyCol = enemy.GetComponent<Collider2D>();
-		Collider2D playerCol = GetComponent<Collider2D>();
-
-		if (!enemies.Contains(enemy)) return;
-
-		GameManager.Instance.audioManager.HookThrowEnemySound(1f); // 적 던지는 효과음
-
-		if (enemyCol != null)
-			enemyCol.enabled = true;
-
-		enemies.Remove(enemy);
-
-		// 부모 해제
-		enemy.SetParent(null);
-
-		// Rigidbody 처리
-		Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
-		if (rb != null)
-		{
-			rb.bodyType = RigidbodyType2D.Dynamic;
-			rb.linearVelocity = Vector2.zero;
-			rb.AddForce(throwDir.normalized * throwForce, ForceMode2D.Impulse);
-		}
-
-		if (enemies.Count == 0)
-		{
-			isEnemyAttach = false;
-			hasPlayedAttachSound = false;
-		}
-
-		line.enabled = true;
-
-		// 훅 상태 초기화
-		isHookActive = false;
-		isLineMax = false;
-		hook.GetComponent<Hooking>().joint2D.enabled = false;
-		hook.gameObject.SetActive(false);
-	}
-
-	// 오브젝트 잡기
-	public void AttachObject(Transform obj)
-	{
-		if (objs.Contains(obj) || isObjAttach || isEnemyAttach) return;
-
-		objs.Add(obj);
-
-		Collider2D objCol = obj.GetComponent<Collider2D>();
-		Collider2D playerCol = GetComponent<Collider2D>();
-
-		if (objCol != null && objCol != null)
-			Physics2D.IgnoreCollision(objCol, playerCol, true);
-
-		// Rigidbody가 있으면 Kinematic으로
-		Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
-		if (rb != null)
-			rb.bodyType = RigidbodyType2D.Kinematic;
-
-		// 플레이어 자식으로
-		obj.SetParent(transform);
-
-		if (objCol != null)
-			objCol.enabled = false;
-
-		// 플레이어 SpriteRenderer 가져오기
-		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();
-
-		// objFollowOffset 기준으로 x를 왼쪽/오른쪽 맞춤
-		Vector3 offset = objFollowOffset;
-		offset.x = playerSprite.flipX ? -Mathf.Abs(objFollowOffset.x) : Mathf.Abs(objFollowOffset.x);
-
-		obj.localPosition = offset;
-
-		// 훅 & 줄 숨기기
-		hook.gameObject.SetActive(false);
-		line.enabled = false;
-
-		isObjAttach = true;
-		isAttach = false;
-		isHookActive = false;
-		isLineMax = false;
-	}
-
-	// 오브젝트 던지기
-	public void ThrowObject(Transform obj, Vector2 throwDir, float throwForce)
-	{
-		Collider2D objCol = obj.GetComponent<Collider2D>();
-		Collider2D playerCol = GetComponent<Collider2D>();
-
-		if (!objs.Contains(obj)) return;
-
-		GameManager.Instance.audioManager.HookThrowEnemySound(1f); // 적 던지는 효과음
-
-		if (objCol != null)
-			objCol.enabled = true;
-
-		objs.Remove(obj);
-
-		// 부모 해제
-		obj.SetParent(null);
-
-		// Rigidbody 처리
-		Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
-		if (rb != null)
-		{
-			rb.bodyType = RigidbodyType2D.Dynamic;
-			rb.linearVelocity = Vector2.zero;
-			rb.AddForce(throwDir.normalized * throwForce, ForceMode2D.Impulse);
-		}
-
-		if (objs.Count == 0)
-		{
-			isObjAttach = false;
-			hasPlayedAttachSound = false;
-		}
-
-		line.enabled = true;
-
-		// 훅 상태 초기화
 		isHookActive = false;
 		isLineMax = false;
 		hook.GetComponent<Hooking>().joint2D.enabled = false;

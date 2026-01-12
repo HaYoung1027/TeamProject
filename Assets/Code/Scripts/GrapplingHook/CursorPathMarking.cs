@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using tagName = Globals.TagName;
+
 public class CursorPathMarking : MonoBehaviour
 {
 	[Header("메인 카메라")]
@@ -14,7 +16,6 @@ public class CursorPathMarking : MonoBehaviour
 	private void Awake()
 	{
 		hook = GetComponent<GrapplingHook>();
-		Debug.Log(hook);
 	}
 
 	private void Start()
@@ -36,7 +37,7 @@ public class CursorPathMarking : MonoBehaviour
 		Vector2 dir = (worldPos - (Vector2)transform.position).normalized;
 
 		// 레이케스트 플레이어 충돌 무시
-		LayerMask mask = ~LayerMask.GetMask("Player");
+		LayerMask mask = ~LayerMask.GetMask(tagName.player);
 
 		// 자기 위치에서 dir 방향으로 광선 발사
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);
@@ -52,18 +53,19 @@ public class CursorPathMarking : MonoBehaviour
 		if (hit)
 		{
 			// 부딪힌 요소가 NPC일 경우 선 비활성화
-			if(hit.collider.CompareTag("NPC"))
+			if(hit.collider.CompareTag(tagName.npc))
 			{
 				visualizerLine.Stop();
 				return;
 			}
 
 			// 부딪힌 요소에 따라 선 색상 변경
-			if (hook.isEnemyAttach && (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Object")))	// 뭔가를 들고 있을 때 오브젝트나 몬스터가 부딪혔을 경우
+			// 뭔가를 들고 있을 때 오브젝트나 몬스터가 부딪혔을 경우
+			if (/*(enemy.isAttach || obj.isAttach) &&*/ (hit.collider.CompareTag(tagName.enemy) || hit.collider.CompareTag(tagName.obj)))
 			{
 				visualizerLine.SetLineColor(new Color(1f, 0.2f, 0.2f));
 			}
-			else if (hit.collider.CompareTag("Object"))
+			else if (hit.collider.CompareTag(tagName.obj))
 			{
 				visualizerLine.SetLineColor(new Color(0.49f, 0.85f, 0.45f));
 			}
