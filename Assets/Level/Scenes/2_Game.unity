@@ -1260,7 +1260,7 @@ Transform:
   m_GameObject: {fileID: 156809785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.1, y: 1.5, z: 0}
+  m_LocalPosition: {x: -107.3, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1362,6 +1362,7 @@ MonoBehaviour:
   slowFactor: 0.5
   slowLength: 2
   swingBoostController: {fileID: 0}
+  followOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &156809795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18830,7 +18831,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.682048, y: 3.4611797, z: -10}
+  m_LocalPosition: {x: 4.683662, y: 3.1012397, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42967,7 +42968,6 @@ GameObject:
   - component: {fileID: 1298111046}
   - component: {fileID: 1298111045}
   - component: {fileID: 1298111049}
-  - component: {fileID: 1298111052}
   - component: {fileID: 1298111051}
   - component: {fileID: 1298111050}
   m_Layer: 0
@@ -43191,31 +43191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingEnemy
   speed: 5
---- !u!114 &1298111052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1298111043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae4652db5bd5ae34b83b704d7d6825a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
-  distance: 0
-  atkDistince: 0
-  isLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  speed: 0
-  bullet: {fileID: 0}
-  bulletPos: {x: 0, y: 0, z: 0}
-  coolTime: 0
-  startPos: {x: 0, y: 0, z: 0}
-  maxTime: 0
-  curTime: 0
-  aiming: {fileID: 0}
 --- !u!1 &1331684992
 GameObject:
   m_ObjectHideFlags: 0
@@ -51330,7 +51305,7 @@ Transform:
   m_GameObject: {fileID: 2027666401}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.47703028, y: 3.4538999, z: -10}
+  m_LocalPosition: {x: -99.67703, y: 2.9538999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

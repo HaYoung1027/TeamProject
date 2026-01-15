@@ -18598,11 +18598,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a16e3300e97eb439cb841d9b5a9465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RopeCreator
-  segmentsCount: 2
-  pointA: {fileID: 814405870}
-  pointB: {fileID: 1030478993}
-  hingePrefeb: {fileID: 0}
-  segments: []
 --- !u!1 &604865949
 GameObject:
   m_ObjectHideFlags: 0
@@ -42414,17 +42409,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4652db5bd5ae34b83b704d7d6825a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
-  distance: 0
-  atkDistince: 0
+  distance: 4
+  atkDistince: 3
   isLayer:
     serializedVersion: 2
-    m_Bits: 0
-  speed: 0
-  bullet: {fileID: 0}
-  bulletPos: {x: 0, y: 0, z: 0}
-  coolTime: 0
-  startPos: {x: 0, y: 0, z: 0}
-  maxTime: 0
+    m_Bits: 64
+  speed: 2
+  bullet: {fileID: 8741880085119485871, guid: df16ce6baba54fb438ce16b3598d1684, type: 3}
+  bulletPos: {x: -0.1, y: 0, z: 0}
+  coolTime: 1
+  startPos: {x: 14.95, y: 8.2, z: 0}
+  maxTime: 1
   curTime: 0
   aiming: {fileID: 0}
 --- !u!50 &1298111046
