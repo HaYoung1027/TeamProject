@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using tagName = Globals.TagName;
+
 public class Hooking : MonoBehaviour
 {
     [Header("이하이면 보정")]
@@ -16,13 +18,13 @@ public class Hooking : MonoBehaviour
 
     void Start()
     {
-        grappling = GameObject.Find("Player").GetComponent<GrapplingHook>();
+        grappling = GameObject.Find(tagName.player).GetComponent<GrapplingHook>();
         joint2D = GetComponent<DistanceJoint2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ceiling"))
+        if (collision.CompareTag(tagName.ground))
         {
             joint2D.enabled = true;
 
@@ -56,15 +58,10 @@ public class Hooking : MonoBehaviour
                 joint2D.distance = minHookLength;
         }
 
-        // 몬스터 잡기
-        if (collision.CompareTag("Enemy") || collision.CompareTag("ThrowingEnemy"))
+        // 몬스터/오브젝트 잡기
+        if (collision.CompareTag(tagName.enemy) || collision.CompareTag(tagName.throwingEnemy) || collision.CompareTag(tagName.obj))
         {
-            grappling.AttachEnemy(collision.transform);
-		}
-		// 오브젝트 잡기
-		else if (collision.CompareTag("Object"))
-		{
-			grappling.AttachObject(collision.transform);
+            grappling.AttachElement(collision.transform);
 		}
 	}
 }

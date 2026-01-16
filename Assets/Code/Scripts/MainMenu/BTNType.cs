@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class BtnType : MonoBehaviour
 {
-    public BTNType currentType;
+    public EnumType.BTNType currentType;
     public Transform buttonScale;
     public AudioSource usedsource;
     public AudioClip usedclip;
@@ -42,11 +42,11 @@ public class BtnType : MonoBehaviour
         // 2. 그 다음 버튼 기능 실행
         switch (currentType)
         {
-            case BTNType.Start:
+            case EnumType.BTNType.Start:
                 SceneManager.LoadScene("2_Game");
                 break;
 
-            case BTNType.Option:
+            case EnumType.BTNType.Option:
                 // GameManager가 존재하고 escKey가 null이 아니면 openOption 실행
                 if (GameManager.Instance != null)
                 {
@@ -69,15 +69,15 @@ public class BtnType : MonoBehaviour
                 }
                 break;
 
-            case BTNType.Back:
+            case EnumType.BTNType.Back:
                 break;
 
-            case BTNType.Quit:
+            case EnumType.BTNType.Quit:
                 Application.Quit();
                 Debug.Log("게임 종료");
                 break;
 
-            case BTNType.Leave:
+            case EnumType.BTNType.Leave:
                 SceneManager.LoadScene("1_MainMenu");
                 break;
         }

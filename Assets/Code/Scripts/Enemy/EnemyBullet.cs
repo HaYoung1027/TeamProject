@@ -2,49 +2,39 @@ using UnityEngine;
 
 public class EnemyBullet : MonoBehaviour
 {
-    public float speed;
-    public float distance;
-    public LayerMask isLayer;
+    public float speed = 8f;
+    public float lifeTime = 2f;
 
-    private Vector2 moveDir; // 총알 이동 방향
+    private Vector2 moveDir;
 
     void Start()
     {
-        // 발사 시점에 플레이어 방향 계산
+        // 발사 순간 플레이어 방향 고정
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            moveDir = (player.transform.position - transform.position).normalized;
-        }
-        else
-        {
-            // 플레이어 없으면 기존 방향
-            moveDir = -transform.right;
-        }
 
-        Invoke("DestroyBullet", 2f);
+        if (player != null)
+            moveDir = (player.transform.position - transform.position).normalized;
+        else
+            moveDir = transform.right;
+
+        float angle = Mathf.Atan2(moveDir.y, moveDir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+        Destroy(gameObject, lifeTime);
     }
 
     void Update()
     {
-        // 이동
         transform.Translate(moveDir * speed * Time.deltaTime, Space.World);
-
-        // 충돌 체크
-        RaycastHit2D raycast = Physics2D.Raycast(transform.position, moveDir, distance, isLayer);
-        if (raycast.collider != null)
-        {
-            if (raycast.collider.CompareTag("Player"))
-            {
-                Debug.Log("당했다!");
-                // TODO: 플레이어 피해 처리
-            }
-            DestroyBullet();
-        }
     }
 
-    void DestroyBullet()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy(gameObject);
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("플레이어 피격!");
+            // TODO : 플레이어 데미지 처리
+            Destroy(gameObject);
+        }
     }
 }

@@ -7,7 +7,7 @@ public class PlayerInteraction : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("NPC"))
+        if (other.CompareTag(Globals.TagName.npc))
         {
             currentDialog = other.GetComponent<DialogSystem>();
         }
