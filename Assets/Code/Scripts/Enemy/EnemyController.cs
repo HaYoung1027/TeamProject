@@ -20,24 +20,30 @@ public class EnemyController : MonoBehaviour
 
 	private void Update()
 	{
-		
+
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
-		// 적과 닿았을 경우
-		if (other.gameObject.CompareTag(tagName.enemy) || other.gameObject.CompareTag(tagName.throwingEnemy))
+		if (gameObject.CompareTag(tagName.enemy))
 		{
-			if (other.gameObject.TryGetComponent<Enemy>(out var target))
+			// 적과 닿았을 경우
+			if (other.gameObject.CompareTag(tagName.throwingEnemy))
 			{
-				target.TakeDamage(1);       // 닿은 적에게 데미지 주기
-				damageable.TakeDamage(1);   // 자기 자신도 데미지 받기
+				if (other.gameObject.TryGetComponent<Enemy>(out var target))
+				{
+					target.TakeDamage(1);       // 닿은 적에게 데미지 주기
+					damageable.TakeDamage(1);   // 자기 자신도 데미지 받기
+				}
 			}
-		}
-		// 오브젝트와 닿았을 경우
-		else if(other.gameObject.CompareTag(tagName.obj))
-		{
-
+			// 오브젝트와 닿았을 경우
+			else if (other.gameObject.CompareTag(tagName.throwingObj))
+			{
+				if (other.gameObject.TryGetComponent<Enemy>(out var target))
+				{
+					target.TakeDamage(1);       // 닿은 적에게 데미지 주기
+				}
+			}
 		}
 	}
 }
