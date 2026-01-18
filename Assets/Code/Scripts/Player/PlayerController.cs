@@ -18,7 +18,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 	PlayerInteraction interaction;  // 상호작용
 	private Animator animator;      // 애니메이션
 
-	void Awake()
+    public float maxTime;			// 땅에서 움직이지 않을 때 일정 시간 이후 Run에서 Idle
+    private float curTime;
+
+    void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
@@ -43,10 +46,16 @@ public class PlayerController : MonoBehaviour, IDamageable
 			// 플레이어가 가만히 있을 때
 			if (inputVec == Vector2.zero)
 			{
-				SetPlayerState(playerState.Idle);
+				
+                curTime += Time.deltaTime;
+                if (curTime >= maxTime)
+				{
+                    SetPlayerState(playerState.Idle);
+                }
 			}
 			else
 			{
+				curTime = 0;
 				SetPlayerState(playerState.Run);
 			}
 		}
@@ -124,7 +133,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	void OnMove(InputValue value)
 	{
 		inputVec = value.Get<Vector2>();
-		SetPlayerState(playerState.Run);
 	}
 
 	// 플레이어 데미지

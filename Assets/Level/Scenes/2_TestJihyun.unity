@@ -1334,6 +1334,7 @@ MonoBehaviour:
   isGrounded: 0
   hasCollided: 0
   inputVec: {x: 0, y: 0}
+  maxTime: 0.3
 --- !u!114 &156809792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1490,7 +1491,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f43d3e7ff2948d4690fefb151ac1133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
-  animator: {fileID: 156809786}
 --- !u!1 &180838152
 GameObject:
   m_ObjectHideFlags: 0
