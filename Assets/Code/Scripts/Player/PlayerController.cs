@@ -83,29 +83,34 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		 // 바닥 체크
-		foreach (var contact in collision.contacts)
-		{
-			if (contact.normal.y > 0.7f &&
-				contact.point.y < transform.position.y)
-			{
-				isGrounded = true;
-				break;
-			}
-		}
-
-		// 충돌 체크
-		hasCollided = true;
-
-		// y값 보정 (바닥 뚫림 방지)
-		if (isGrounded && rigid.linearVelocityY < 0f)
-		{
-			rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
-		}
-
+		CheckGround(collision);     // 바닥 체크
 	}
 
 	void OnCollisionStay2D(Collision2D collision)
+	{
+		CheckGround(collision);		// 바닥 체크
+	}
+
+	private void OnCollisionExit2D(Collision2D collision)
+	{
+		isGrounded = false;
+	}
+
+
+	void OnMove(InputValue value)
+	{
+		inputVec = value.Get<Vector2>();
+	}
+
+	// 플레이어 데미지
+	public void TakeDamage(int attack)
+	{
+		// 플레이어 체력 줄어들기
+		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
+	}
+
+	// 바닥 체크
+	public void CheckGround(Collision2D collision)
 	{
 		// 바닥 체크
 		foreach (var contact in collision.contacts)
@@ -126,25 +131,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
 		}
-
-	}
-
-	private void OnCollisionExit2D(Collision2D collision)
-	{
-		isGrounded = false;
-	}
-
-
-	void OnMove(InputValue value)
-	{
-		inputVec = value.Get<Vector2>();
-	}
-
-	// 플레이어 데미지
-	public void TakeDamage(int attack)
-	{
-		// 플레이어 체력 줄어들기
-		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
 	}
 
 }
