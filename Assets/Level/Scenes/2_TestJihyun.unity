@@ -1209,12 +1209,12 @@ GameObject:
   - component: {fileID: 156809787}
   - component: {fileID: 156809786}
   - component: {fileID: 156809792}
-  - component: {fileID: 156809796}
   - component: {fileID: 156809793}
   - component: {fileID: 156809791}
   - component: {fileID: 156809794}
   - component: {fileID: 156809795}
   - component: {fileID: 156809797}
+  - component: {fileID: 156809798}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1427,8 +1427,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d334fe44497ba40ae018936610b47d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
---- !u!61 &156809796
-BoxCollider2D:
+--- !u!114 &156809797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156809785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3899d5b698d2fbb4ca12f55745e5a7b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursorPathMarking
+  mainCam: {fileID: 519420031}
+  visualizerLine: {fileID: 1965681169}
+--- !u!70 &156809798
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1462,31 +1476,8 @@ BoxCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.0625, y: 1.1875}
-    newSize: {x: 1.4375, y: 1.125}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   m_Size: {x: 1.0625, y: 1.1875}
-  m_EdgeRadius: 0
---- !u!114 &156809797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156809785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3899d5b698d2fbb4ca12f55745e5a7b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CursorPathMarking
-  mainCam: {fileID: 519420031}
-  visualizerLine: {fileID: 1965681169}
+  m_Direction: 0
 --- !u!1 &180838152
 GameObject:
   m_ObjectHideFlags: 0
@@ -49505,7 +49496,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!232 &1914685230
 DistanceJoint2D:
   m_ObjectHideFlags: 0
