@@ -37,7 +37,6 @@ public class GrapplingHook : MonoBehaviour
 	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
 	private DistanceJoint2D hookJoint;
-	private bool isStopped = false;
 
 	PlayerController player;    // 플레이어
 
@@ -48,7 +47,7 @@ public class GrapplingHook : MonoBehaviour
 	List<Transform> hookingList = new List<Transform>();    // 그래플링 훅으로 잡은 요소 리스트
 
 	[Header("오프셋 (잡힌 오브젝트 이동 보정값)")]
-	public Vector3 followOffset = Vector3.zero;
+	public Vector3 followOffset = new Vector3(1f, 0f, 0f);	// 기본값: (1, 0, 0)
 
 	private void Awake()
 	{

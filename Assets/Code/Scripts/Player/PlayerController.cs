@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
+using playerState = EnumType.PlayerState;
+
 public class PlayerController : MonoBehaviour, IDamageable
 {
 	public bool isGrounded;
@@ -14,6 +16,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	GrapplingHook grappling;
 
 	PlayerInteraction interaction;  // 상호작용
+	private Animator animator;      // 애니메이션
 
 	void Awake()
 	{
@@ -21,10 +24,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 		sprite = GetComponent<SpriteRenderer>();
 		grappling = GetComponent<GrapplingHook>();
 		interaction = GetComponent<PlayerInteraction>();
+		animator = GetComponent<Animator>();
 	}
 	void Start()
 	{
 		isGrounded = true;
+		SetPlayerState(playerState.Idle);
 	}
 	void FixedUpdate()
 	{
@@ -33,11 +38,28 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         float speed = GameManager.Instance.playerStatsRuntime.speed;
 
-        // 그래플 시작 순간
-        if (!wasAttach && grappling.isAttach)
-        {
-            // 입력 방향으로 쌓인 속도만 제거
-            rigid.linearVelocity = new Vector2(0f, rigid.linearVelocity.y); // 수평 가속도 제거, 수직 가속도 유지
+		if (isGrounded)
+		{
+			// 플레이어가 가만히 있을 때
+			if (inputVec == Vector2.zero)
+			{
+				SetPlayerState(playerState.Idle);
+			}
+			else
+			{
+				SetPlayerState(playerState.Run);
+			}
+		}
+		else
+		{
+			SetPlayerState(playerState.Idle);
+		}
+
+		// 그래플 시작 순간
+		if (!wasAttach && grappling.isAttach)
+		{
+			// 입력 방향으로 쌓인 속도만 제거
+			rigid.linearVelocity = new Vector2(0f, rigid.linearVelocity.y); // 수평 가속도 제거, 수직 가속도 유지
 		}
 
 		if (grappling.isAttach)
@@ -85,29 +107,35 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		 // 바닥 체크
-		foreach (var contact in collision.contacts)
-		{
-			if (contact.normal.y > 0.7f &&
-				contact.point.y < transform.position.y)
-			{
-				isGrounded = true;
-				break;
-			}
-		}
-
-		// 충돌 체크
-		hasCollided = true;
-
-		// y값 보정 (바닥 뚫림 방지)
-		if (isGrounded && rigid.linearVelocityY < 0f)
-		{
-			rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
-		}
-
+		CheckGround(collision);     // 바닥 체크
 	}
 
 	void OnCollisionStay2D(Collision2D collision)
+	{
+		CheckGround(collision);     // 바닥 체크
+	}
+
+	private void OnCollisionExit2D(Collision2D collision)
+	{
+		isGrounded = false;
+	}
+
+
+	void OnMove(InputValue value)
+	{
+		inputVec = value.Get<Vector2>();
+		SetPlayerState(playerState.Run);
+	}
+
+	// 플레이어 데미지
+	public void TakeDamage(int attack)
+	{
+		// 플레이어 체력 줄어들기
+		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
+	}
+
+	// 바닥 체크
+	public void CheckGround(Collision2D collision)
 	{
 		// 바닥 체크
 		foreach (var contact in collision.contacts)
@@ -128,25 +156,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
 		}
-
 	}
 
-	private void OnCollisionExit2D(Collision2D collision)
+	// 플레이어 상태 변경
+	void SetPlayerState(playerState state)
 	{
-		isGrounded = false;
+		animator.SetInteger("playerState", (int)state);
 	}
-
-
-	void OnMove(InputValue value)
-	{
-		inputVec = value.Get<Vector2>();
-	}
-
-	// 플레이어 데미지
-	public void TakeDamage(int attack)
-	{
-		// 플레이어 체력 줄어들기
-		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
-	}
-
 }
