@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	}
 	void FixedUpdate()
 	{
-        if (TimelineController.isTimelinePlaying) return;	// 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+        if (TimelineController.isTimelinePlaying) return;    // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
         if (interaction && interaction.GetIsAction()) return;
 
         float speed = GameManager.Instance.playerStatsRuntime.speed;

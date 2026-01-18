@@ -1294,6 +1294,7 @@ MonoBehaviour:
   isGrounded: 0
   hasCollided: 0
   inputVec: {x: 0, y: 0}
+  maxTime: 0
 --- !u!114 &156809792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1374,6 +1375,12 @@ MonoBehaviour:
   slowFactor: 0.5
   slowLength: 2
   swingBoostController: {fileID: 0}
+  followOffset: {x: 1, y: 0, z: 0}
+  swingGauge: {fileID: 1286075245}
+  maxTurns: 1
+  decreaseSpeed: 400
+  increaseMultiplier: 1
+  turnMinDelta: 0.3
 --- !u!114 &156809795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1458,12 +1465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 999c92b5ce3397b499191207a11e1ed1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwingGaugeController
-  swingGauge: {fileID: 1286075245}
-  hook: {fileID: 1914685234}
-  maxTurns: 1
-  decreaseSpeed: 120
-  increaseMultiplier: 1
-  turnMinDelta: 0.3
 --- !u!114 &156809799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19542,6 +19543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eda752d879f4f594ea16a2519c84b560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingEnemy
+  speed: 0
 --- !u!50 &733997520
 Rigidbody2D:
   serializedVersion: 5
@@ -21352,6 +21354,7 @@ MonoBehaviour:
   poolManager: {fileID: 887307777}
   cameraShake: {fileID: 2027666406}
   playerController: {fileID: 156809791}
+  grapplingHook: {fileID: 156809794}
   playerStats: {fileID: 11400000, guid: 85d0ceea785f7de46a030e9444c1e8b4, type: 2}
   enemyStats: {fileID: 11400000, guid: f5685b396f0123743a5d84581880763e, type: 2}
   playerStatsRuntime:
@@ -42562,6 +42565,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4652db5bd5ae34b83b704d7d6825a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  distance: 0
+  atkDistince: 0
+  isLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  speed: 0
+  bullet: {fileID: 0}
+  bulletPos: {x: 0, y: 0, z: 0}
+  coolTime: 0
+  startPos: {x: 0, y: 0, z: 0}
+  maxTime: 0
+  detectDelay: 1
+  attackWindowTime: 3
+  blinkSpeed: 6
+  aiming: {fileID: 0}
 --- !u!50 &1298111046
 Rigidbody2D:
   serializedVersion: 5
