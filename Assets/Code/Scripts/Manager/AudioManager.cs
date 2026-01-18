@@ -23,7 +23,6 @@ public class AudioManager : MonoBehaviour
     [Header("Dialog SFX")]
     public AudioClip textTyping;
 
-
     const string BGM_KEY = "BGM_VOLUME";
     const string SFX_KEY = "SFX_VOLUME";
 

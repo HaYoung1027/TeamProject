@@ -6,6 +6,7 @@ public class GameManager : MonoSingleton<GameManager> // 싱글톤 사용
     [Header("Manager 관련 코드")]
     public AudioManager audioManager;
     public PoolManager poolManager;
+	public DialogSystem dialogSystem;
 
     [Header("카메라 관련 코드")]
     public CameraShake cameraShake;

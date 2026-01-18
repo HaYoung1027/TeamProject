@@ -25,8 +25,10 @@ public class CursorPathMarking : MonoBehaviour
 
 	void Update()
 	{
-		// 스크린 좌표 구하기
 		if (Mouse.current == null) return;
+		if (GameManager.Instance.dialogSystem && GameManager.Instance.dialogSystem.isAction) return;	// 상호작용 중일 경우 표시선 그리지 않음
+
+		// 스크린 좌표 구하기
 		Vector3 mouseScreen = Mouse.current.position.ReadValue();
 		mouseScreen.z = Mathf.Abs(mainCam.transform.position.z);	// z값 보정
 

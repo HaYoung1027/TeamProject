@@ -1161,8 +1161,6 @@ GameObject:
   - component: {fileID: 156809794}
   - component: {fileID: 156809795}
   - component: {fileID: 156809797}
-  - component: {fileID: 156809799}
-  - component: {fileID: 156809798}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1282,6 +1280,7 @@ MonoBehaviour:
   isGrounded: 0
   hasCollided: 0
   inputVec: {x: 0, y: 0}
+  maxTime: 0
 --- !u!114 &156809792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1296,7 +1295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
   m_Actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
+  m_UIInputModule: {fileID: 509401722}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1361,8 +1360,14 @@ MonoBehaviour:
   isSlowing: 0
   slowFactor: 0.5
   slowLength: 2
-  swingBoostController: {fileID: 0}
   followOffset: {x: 0, y: 0, z: 0}
+  swingGauge: {fileID: 0}
+  maxTurns: 1
+  decreaseSpeed: 400
+  increaseMultiplier: 1
+  turnMinDelta: 0.3
+  boostMultiplier: 1.5
+  boostDuration: 0.5
 --- !u!114 &156809795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1435,38 +1440,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CursorPathMarking
   mainCam: {fileID: 519420031}
   visualizerLine: {fileID: 1965681169}
---- !u!114 &156809798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156809785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11ed0b504517e004eb8510cda5abb9b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SwingBoostController
-  boostMultiplier: 1.5
-  boostDuration: 0.5
---- !u!114 &156809799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156809785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 999c92b5ce3397b499191207a11e1ed1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SwingGaugeController
-  swingGauge: {fileID: 260283592}
-  hook: {fileID: 1914685234}
-  maxTurns: 3
-  decreaseSpeed: 200
-  increaseMultiplier: 1
-  turnMinDelta: 0.3
 --- !u!1 &180838152
 GameObject:
   m_ObjectHideFlags: 0
@@ -21693,8 +21666,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   audioManager: {fileID: 849897822}
   poolManager: {fileID: 887307777}
+  dialogSystem: {fileID: 0}
   cameraShake: {fileID: 2027666406}
   playerController: {fileID: 156809791}
+  grapplingHook: {fileID: 0}
   playerStats: {fileID: 11400000, guid: 85d0ceea785f7de46a030e9444c1e8b4, type: 2}
   enemyStats: {fileID: 11400000, guid: f5685b396f0123743a5d84581880763e, type: 2}
   playerStatsRuntime:
@@ -43015,7 +42990,9 @@ MonoBehaviour:
   coolTime: 2
   startPos: {x: 14.95, y: 8.2, z: 0}
   maxTime: 2
-  curTime: 0
+  detectDelay: 1
+  attackWindowTime: 3
+  blinkSpeed: 6
   aiming: {fileID: 0}
 --- !u!50 &1298111046
 Rigidbody2D:
@@ -43174,10 +43151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBullet
   speed: 1
-  distance: 2
-  isLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  lifeTime: 2
 --- !u!114 &1298111051
 MonoBehaviour:
   m_ObjectHideFlags: 0

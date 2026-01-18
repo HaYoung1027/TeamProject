@@ -45,7 +45,7 @@ public class DialogSystem : MonoBehaviour
 
     Coroutine typingCoroutine;
 
-    void Update()
+	void Update()
     {
         if (!isAction) return;
 
