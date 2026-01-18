@@ -1,72 +1,71 @@
-﻿using DG.Tweening;
-using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 using tagName = Globals.TagName;
 
 public class GrapplingHook : MonoBehaviour
 {
-	public Volume globalVolume;
-	public LineRenderer line;
-	public Transform hook;
-	private Vector2 mousedir;
+    [Header("Global Volume 오브젝트")]
+    public Volume globalVolume;
+    [Header("Line 오브젝트 LineRenderer")]
+    public LineRenderer line;
+    [Header("Hook 오브젝트 Transform")]
+    public Transform hook;
+    [Header("훅 활성화 상태 여부")]
+    public bool isHookActive;
+    [Header("그래플링 훅 길이가 최대인지")]
+	public bool isLineMax;
+    [Header("그래플링 훅 사용 중인지 여부")]
+    public bool isAttach;
+    [Header("그래플링 훅으로 무언가를 잡았는지 여부")]
+    public bool isAttachElement;
+    [Header("슬로우모션 여부")]
+    public bool isSlowing;
+    [Header("슬로우 비율")]
+    public float slowFactor;
+    [Header("원래 속도로 복귀하는 데 걸리는 시간")]
+    public float slowLength;
+    [Header("오프셋 (잡힌 오브젝트 이동 보정값)")]
+    public Vector3 followOffset = new Vector3(1f, 0f, 0f);  // 기본값: (1, 0, 0)
+    [Header("회전 에너지 게이지 UI")]
+    public Slider swingGauge;
+    [Header("저장가능한 최대 회전 수(에너지 제한)")]
+    public int maxTurns = 1;
+    [Header("회전 중이지 않을 때 게이지 감소 속도")]
+    public float decreaseSpeed = 400f;
+    [Header("회전할 때 회전량 증가 배율")]
+    public float increaseMultiplier = 1.0f;
+    [Header("회전으로 인정할 최소 각도 변화")]
+    public float turnMinDelta = 0.3f;
+    [Header("속도 증가 배율")]
+    public float boostMultiplier = 1.5f;
+    [Header("Boost 지속 시간")]
+    public float boostDuration = 0.5f;
 
-	public bool isHookActive;
-	public bool isLineMax;          // 그래플링 훅 길이가 최대인지
-	public bool isAttach;           // 그래플링 훅 사용 중인지 여부
-	public bool isAttachElement;    // 그래플링 훅으로 무언가를 잡았는지 여부
-	public bool isSlowing;          // 슬로우모션 여부
-	private bool hasShakedOnAttach = false;
+    private Vector2 mousedir;
+    private bool hasShakedOnAttach = false;
 	private bool hasPlayedAttachSound = false;
 	private bool isPlayedDraftSound = false;
 	private bool hasPlayedShootSound = false;
 	private bool hasAppliedHookForce = false;
-
-	// 슬로우 효과 변수
-	public float slowFactor;    // 슬로우 비율
-	public float slowLength;    // 원래 속도로 복귀하는 데 걸리는 시간
-	private Coroutine slowCoroutine;    // 슬로우 효과 코루틴
-
+    private float accumulatedAngle = 0f;    // 누적 회전량(게이지 수치)
+    private float maxAngle;                 // maxTurns 회전 시 최대 각도(= 360 * maxTurns)
+    private float previousAngle;            // 이전 프레임의 각도
+    private bool angleInitialized = false;  // 첫 프레임 각도 초기화 여부
+    private int storedDirection = 0;        // 저장된 회전 방향(1=시계, -1=반시계, 0=없음)
+    private Coroutine currentBoost;
+    private Coroutine slowCoroutine;    // 슬로우 효과 코루틴
 	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
 	private DistanceJoint2D hookJoint;
-
 	ColorAdjustments colorAdjustments;
-
 	List<Transform> hookingList = new List<Transform>();    // 그래플링 훅으로 잡은 요소 리스트
 
-	[Header("오프셋 (잡힌 오브젝트 이동 보정값)")]
-	public Vector3 followOffset = new Vector3(1f, 0f, 0f);  // 기본값: (1, 0, 0)
-
-	// ---------------------------------------------------------------------------------------
-
-	public Slider swingGauge;               // 회전 에너지 게이지 UI
-
-	public int maxTurns = 1;                // 저장가능한 최대 회전 수(에너지 제한)
-	public float decreaseSpeed = 400f;      // 회전 중이지 않을 때 게이지 감소 속도
-	public float increaseMultiplier = 1.0f; // 회전할 때 회전량 증가 배율
-	public float turnMinDelta = 0.3f;       // 회전으로 인정할 최소 각도 변화
-
-	private float accumulatedAngle = 0f;    // 누적 회전량(게이지 수치)
-	private float maxAngle;                 // maxTurns 회전 시 최대 각도(= 360 * maxTurns)
-
-	private float previousAngle;            // 이전 프레임의 각도
-	private bool angleInitialized = false;  // 첫 프레임 각도 초기화 여부
-
-	private int storedDirection = 0;        // 저장된 회전 방향(1=시계, -1=반시계, 0=없음)
-
-	public float boostMultiplier = 1.5f;  // 속도 증가 배율
-	public float boostDuration = 0.5f;     // Boost 지속 시간
-
-	private Coroutine currentBoost;
 
 	private void Awake()
 	{
@@ -171,7 +170,6 @@ public class GrapplingHook : MonoBehaviour
         }
     }
 
-
     void HandleAttachState() // 그래플링 붙어 있을 때 처리
     {
         if (!isAttach) return;
@@ -207,7 +205,9 @@ public class GrapplingHook : MonoBehaviour
         hook.gameObject.SetActive(false);
 
         if (slowCoroutine != null)
+        {
             StopCoroutine(slowCoroutine);
+        }
 
         slowCoroutine = StartCoroutine(SlowRoutine());
 
@@ -370,7 +370,9 @@ public class GrapplingHook : MonoBehaviour
 
 		// 플레이어가 자기 자신을 잡았을 때 -> 충돌 무시
 		if (elementCol != null && playerCol != null)
-			Physics2D.IgnoreCollision(elementCol, playerCol, true);
+        {
+            Physics2D.IgnoreCollision(elementCol, playerCol, true);
+        }
 
 		// Rigidbody가 있으면 Kinematic으로
 		Rigidbody2D rb = element.GetComponent<Rigidbody2D>();
@@ -468,7 +470,9 @@ public class GrapplingHook : MonoBehaviour
 		sprite.color = Color.red;
 
 		if (colorAdjustments != null)
-			colorAdjustments.saturation.value = -50f;
+        {
+            colorAdjustments.saturation.value = -50f;
+        }
 
 		Time.timeScale = slowFactor;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
@@ -477,10 +481,9 @@ public class GrapplingHook : MonoBehaviour
 
 		while (elapsed < slowLength)
 		{
-			if (GameManager.Instance.playerController.isGrounded || isAttach)
-				break;
+			if (GameManager.Instance.playerController.isGrounded || isAttach) break;
 
-			elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.unscaledDeltaTime;
 			yield return null;
 		}
 
@@ -489,7 +492,9 @@ public class GrapplingHook : MonoBehaviour
 		sprite.color = Color.white;
 
 		if (colorAdjustments != null)
-			colorAdjustments.saturation.value = 0f;
+        {
+            colorAdjustments.saturation.value = 0f;
+        }
 	}
 
 	// 힘 주기
@@ -511,8 +516,9 @@ public class GrapplingHook : MonoBehaviour
     public void Boost(float gaugePercent)
     {
         if (currentBoost != null)
+        {
             StopCoroutine(currentBoost);
-
+        }
         currentBoost = StartCoroutine(BoostRoutine(gaugePercent));
     }
 
@@ -527,15 +533,12 @@ public class GrapplingHook : MonoBehaviour
         float time = 0f;
         while (time < boostDuration)
         {
-            if (GameManager.Instance.playerController.hasCollided)
-                break;
+            if (GameManager.Instance.playerController.hasCollided) break;
 
             time += Time.deltaTime;
             yield return null;
         }
-
         stats.speed = originalSpeed;
         currentBoost = null;
     }
-
 }
