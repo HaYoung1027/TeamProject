@@ -2,42 +2,50 @@ using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour
 {
+    [Header("감지 거리")]
     public float distance;
+    [Header("조준 거리")]
     public float atkDistince;
+    [Header("감지 대상 레이어 (보통 Player 레이어)")]
     public LayerMask isLayer;
+    [Header("이동 속도")]
     public float speed;
-
+    [Header("발사할 총알 프리팹")]
     public GameObject bullet;
+    [Header("총알이 생성 위치 오프셋 (적 기준)")]
     public Vector3 bulletPos;
+    [Header("한 번 발사 후 다음 발사까지의 쿨타임")]
     public float coolTime;
-    private float currentTime;
 
+    private float currentTime;              // 현재 남아있는 쿨타임 시간
+    [Header("적의 최초 위치 (복귀 지점)")]
     public Vector3 startPos;
+    [Header("플레이어를 놓친 후 복귀를 시작하기까지의 대기 시간")]
     public float maxTime;
-    public float curTime;
+    private float curTime;                  // 플레이어 미감지 상태에서 흐르는 시간
 
-    [Header("Attack Delay")]
-    public float detectDelay = 1.0f;   // 감지 후 발사까지 대기 시간
-    private float detectTimer = 0f;
+    [Header("감지 후 발사까지 대기 시간")]
+    public float detectDelay = 1.0f;
+    private float detectTimer = 0f;         // 감지 상태가 유지된 시간 누적용 타이머
 
-    [Header("Attack Window")]
-    public float attackWindowTime = 3f;   // 발사 가능한 유지 시간
-    private float attackWindowTimer = 0f;
+    [Header("발사 유지 시간")]
+    public float attackWindowTime = 3f;
+    private float attackWindowTimer = 0f;   // 발사 가능 상태가 유지된 시간 누적용 타이머
 
-    [Header("Blink Setting")]
+    [Header("조준선이 깜빡이는 속도")]
     public float blinkSpeed = 6f;
+    [Header("플레이어에게 붙는 조준 프리팹")]
+    public GameObject aiming;
+    private GameObject currentAiming;       // 현재 생성되어 플레이어에게 붙어 있는 조준 오브젝트
 
-    public GameObject aiming;          // 조준 프리팹
-    private GameObject currentAiming;  // 현재 조준 오브젝트
+    private Transform enemyTransform;       // 적 자신의 Transform 위치
+    private Transform targetPlayer;         // 현재 타겟으로 잡힌 플레이어 Transform
 
-    private Transform enemyTransform;
-    private Transform targetPlayer;
+    private int moveDirection = 1;          // 적의 순찰 및 감지 방향 1: 오른쪽, -1: 왼쪽
 
-    private int moveDirection = 1; // 1: 오른쪽, -1: 왼쪽
+    LineRenderer line;                      // 플레이어와 적 사이를 잇는 조준선
 
-    LineRenderer line;
-
-    private bool blinking = false;
+    private bool blinking = false;          // 조준선이 깜빡이는 상태인지 여부
 
     private void Start()
     {
@@ -60,7 +68,7 @@ public class EnemyAttack : MonoBehaviour
 
         RaycastHit2D raycast = Physics2D.CapsuleCast(
             transform.position,
-            new Vector2(3f, 16f),
+            new Vector2(3f, 16f),           // 감지 범위
             CapsuleDirection2D.Vertical,
             0f,
             rayDir,
@@ -68,17 +76,18 @@ public class EnemyAttack : MonoBehaviour
             isLayer
         );
 
-        if (raycast.collider != null) // 플레이어 감지
+        if (raycast.collider != null)      // 플레이어 감지
         {
             curTime = 0;
             Transform player = raycast.collider.transform;
 
-            detectTimer += Time.deltaTime;
+            detectTimer += Time.deltaTime; // 감지 시간 증가
 
             float dist = Vector2.Distance(transform.position, player.position);
 
             if (dist < atkDistince)
             {
+                // 조준선 잇기
                 line.SetPosition(0, enemyTransform.position);
                 line.SetPosition(1, player.position);
 
@@ -151,7 +160,7 @@ public class EnemyAttack : MonoBehaviour
             }
         }
 
-        // ===== 깜빡임 처리 (enable on/off) =====
+        // 조준선 깜빡임 처리
         if (blinking)
         {
             line.enabled = Mathf.FloorToInt(Time.time * blinkSpeed) % 2 == 0;
@@ -169,7 +178,7 @@ public class EnemyAttack : MonoBehaviour
         Debug.DrawRay(transform.position - Vector3.up, rayDir * distance, Color.red);
     }
 
-    void ResetAttackState()
+    void ResetAttackState() // 초기화
     {
         detectTimer = 0f;
         attackWindowTimer = 0f;
