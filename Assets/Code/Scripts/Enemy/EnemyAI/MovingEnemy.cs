@@ -5,8 +5,11 @@ public class MovingEnemy : MonoBehaviour
     public float speed;
     bool isLeft = true;
 
-    // Update is called once per frame
-    void Update()
+	private void Start()
+	{
+		if(speed == 0) speed = 3;	// ±âº»°ª: 3
+	}
+	void Update()
     {
         transform.Translate(Vector2.left * speed * Time.deltaTime);
     }

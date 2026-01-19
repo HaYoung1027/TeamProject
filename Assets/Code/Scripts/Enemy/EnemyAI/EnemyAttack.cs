@@ -29,7 +29,7 @@ public class EnemyAttack : MonoBehaviour
     private float detectTimer = 0f;         // 감지 상태가 유지된 시간 누적용 타이머
 
     [Header("발사 유지 시간")]
-    public float attackWindowTime = 3f;
+    public float attackWindowTime = 2f;
     private float attackWindowTimer = 0f;   // 발사 가능 상태가 유지된 시간 누적용 타이머
 
     [Header("조준선이 깜빡이는 속도")]

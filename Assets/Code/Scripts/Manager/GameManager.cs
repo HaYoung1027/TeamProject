@@ -1,8 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager> // 싱글톤 사용
 {
+	private static GameManager managerInstance = null;
+
     [Header("Manager 관련 코드")]
     public AudioManager audioManager;
     public PoolManager poolManager;
@@ -28,6 +31,15 @@ public class GameManager : MonoSingleton<GameManager> // 싱글톤 사용
 
     protected new void Awake()
     {
+		if(managerInstance)
+		{
+			DestroyImmediate(this.gameObject);
+			return;
+		}
+
+		managerInstance = this;
+		DontDestroyOnLoad(this.gameObject);
+
         QualitySettings.vSyncCount = 0; // VSync 비활성화 (모니터 주사율 영향 제거)
 
         Application.targetFrameRate = 120; // 프레임 120 제한
