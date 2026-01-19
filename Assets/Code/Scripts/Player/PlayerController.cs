@@ -112,7 +112,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void OnMove(InputValue value)
 	{
-		inputVec = value.Get<Vector2>();
+        if (TimelineController.isTimelinePlaying) return;    // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+        inputVec = value.Get<Vector2>();
 		SetPlayerState(playerState.Run);
 	}
 
@@ -154,7 +155,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// 애니메이션 업데이트
 	void UpdateAnimation()
 	{
-		if (isGrounded)
+        if (TimelineController.isTimelinePlaying) return;    // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+        if (isGrounded)
 		{
 			// 플레이어가 가만히 있을 때
 			if (inputVec == Vector2.zero)
