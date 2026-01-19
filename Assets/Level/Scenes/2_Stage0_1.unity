@@ -345,6 +345,10 @@ PrefabInstance:
       propertyPath: globalVolume
       value: 
       objectReference: {fileID: 1107199815}
+    - target: {fileID: 1031755658764454315, guid: aacc80020f45af9459318ec226fa961d, type: 3}
+      propertyPath: visualizerLine
+      value: 
+      objectReference: {fileID: 661615414}
     - target: {fileID: 1276845852994878136, guid: aacc80020f45af9459318ec226fa961d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.726
@@ -414,7 +418,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1380159521}
     m_RemovedComponents:
-    - {fileID: 4829653216477449006, guid: aacc80020f45af9459318ec226fa961d, type: 3}
+    - {fileID: 0}
+    - {fileID: 461583872554884000, guid: aacc80020f45af9459318ec226fa961d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

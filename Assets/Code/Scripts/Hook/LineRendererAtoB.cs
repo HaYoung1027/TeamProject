@@ -9,7 +9,7 @@ public class LineRendererAtoB : MonoBehaviour
 		lineRenderer = GetComponent<LineRenderer>();
 
 		lineRenderer.positionCount = 2;     // 그리는 점의 갯수
-		lineRenderer.enabled = true;
+		lineRenderer.enabled = false;
 	}
 
 	// 선 색상 변경함수 (단색)
