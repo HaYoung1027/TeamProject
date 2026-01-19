@@ -9,10 +9,14 @@ using tagName = Globals.TagName;
 
 public class GrapplingHook : MonoBehaviour
 {
+    [Header("메인 카메라")]
+    public Camera mainCam;
     [Header("Global Volume 오브젝트")]
     public Volume globalVolume;
     [Header("Line 오브젝트 LineRenderer")]
     public LineRenderer line;
+    [Header("visualizerLine 오브젝트 LineRenderer")]
+    public LineRendererAtoB visualizerLine;
     [Header("Hook 오브젝트 Transform")]
     public Transform hook;
     [Header("훅 활성화 상태 여부")]
@@ -48,6 +52,7 @@ public class GrapplingHook : MonoBehaviour
     private bool hasShakedOnAttach = false;
 	private bool hasPlayedAttachSound = false;
 	private bool isPlayedDraftSound = false;
+    private float distance = 0f;                            // 표시선 길이
     private float accumulatedAngle = 0f;                    // 누적 회전량(게이지 수치)
     private float maxAngle;                                 // maxTurns 회전 시 최대 각도(= 360 * maxTurns)
     private float previousAngle;                            // 이전 프레임의 각도
@@ -79,10 +84,10 @@ public class GrapplingHook : MonoBehaviour
 		line.useWorldSpace = true;
 		isAttach = false;
 		hook.gameObject.SetActive(false);
-
 		hookJoint = hook.GetComponent<DistanceJoint2D>();
+        distance = GameManager.Instance.playerStats.hookDistance;
 
-		if (globalVolume == null)
+        if (globalVolume == null)
 		{
 			Debug.LogError("Global Volume이 할당되지 않았음");
 			return;
@@ -101,7 +106,9 @@ public class GrapplingHook : MonoBehaviour
         HandleAttachState();
         HandleSwingGauge();
         HandleThrow();
-	}
+        CursorPathMarking();
+
+    }
 
 	void LateUpdate()
 	{
@@ -467,5 +474,46 @@ public class GrapplingHook : MonoBehaviour
 
         stats.speed = originalSpeed;
         currentBoost = null;
+    }
+
+    public void CursorPathMarking()
+    {
+        if (Mouse.current == null) return;
+        if (GameManager.Instance.dialogSystem && GameManager.Instance.dialogSystem.isAction) return;    // 상호작용 중일 경우 표시선 그리지 않음
+
+        Vector3 mouseScreen = Mouse.current.position.ReadValue();                       // 스크린 좌표 구하기
+        mouseScreen.z = Mathf.Abs(mainCam.transform.position.z);                        // z값 보정
+        Vector2 worldPos = mainCam.ScreenToWorldPoint(mouseScreen);                     // 월드 좌표
+        Vector2 dir = (worldPos - (Vector2)transform.position).normalized;              // 광선 방향
+        LayerMask mask = ~LayerMask.GetMask(tagName.player);                            // 레이케스트 플레이어 충돌 무시
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);  // 자기 위치에서 dir 방향으로 광선 발사
+        
+        if (isAttach)       // 훅 사용 중이거나 몬스터를 잡고 있을 경우 선 비활성화
+        {
+            visualizerLine.Stop();
+            return;
+        }
+
+        if (hit)        // 광선에 부딪히는 오브젝트가 있으면 선 활성화
+        {      
+            if (hit.collider.CompareTag(tagName.npc))   // 부딪힌 요소가 NPC일 경우 선 비활성화
+            {
+                visualizerLine.Stop();
+                return;
+            }
+
+            // 부딪힌 요소에 따라 선 색상 변경
+            // 뭔가를 들고 있을 때 오브젝트나 몬스터가 부딪혔을 경우
+            if (/*(enemy.isAttach || obj.isAttach) &&*/ (hit.collider.CompareTag(tagName.enemy) || hit.collider.CompareTag(tagName.obj)))
+                visualizerLine.SetLineColor(new Color(1f, 0.2f, 0.2f));
+            else if (hit.collider.CompareTag(tagName.obj))
+                visualizerLine.SetLineColor(new Color(0.49f, 0.85f, 0.45f));
+            else
+                visualizerLine.SetLineColor(new Color(0.18f, 0.76f, 1f));
+
+            visualizerLine.Play(transform.position, hit.point);
+        }
+        else
+            visualizerLine.Stop();
     }
 }

@@ -1213,7 +1213,6 @@ GameObject:
   - component: {fileID: 156809791}
   - component: {fileID: 156809794}
   - component: {fileID: 156809795}
-  - component: {fileID: 156809797}
   - component: {fileID: 156809798}
   m_Layer: 6
   m_Name: Player
@@ -1404,8 +1403,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96080ce099ea71e4088789d1539497b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hook
+  mainCam: {fileID: 519420031}
   globalVolume: {fileID: 1383601349}
   line: {fileID: 1762199177}
+  visualizerLine: {fileID: 1965681169}
   hook: {fileID: 1914685234}
   isHookActive: 0
   isLineMax: 0
@@ -1433,20 +1434,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d334fe44497ba40ae018936610b47d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
---- !u!114 &156809797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156809785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3899d5b698d2fbb4ca12f55745e5a7b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CursorPathMarking
-  mainCam: {fileID: 519420031}
-  visualizerLine: {fileID: 1965681169}
 --- !u!70 &156809798
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
