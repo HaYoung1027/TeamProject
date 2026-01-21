@@ -6,57 +6,37 @@ using UnityEngine;
 [System.Serializable]
 public class PoolInfo
 {
-    // 풀을 구분하기 위한 이름 (Dictionary key로 사용)
-    public string prefabName;
-
-    // 실제 생성할 프리팹
-    public GameObject prefab;
-
-    // 처음에 미리 만들어 둘 개수
-    public int initialSize = 10;
+    public string prefabName;       // 풀을 구분하기 위한 이름 (Dictionary key로 사용)
+    public GameObject prefab;       // 실제 생성할 프리팹
+    public int initialSize = 10;    // 처음에 미리 만들어 둘 개수
 }
 
 public class PoolManager : MonoBehaviour
 {
-    // Inspector에서 여러 풀 정보를 등록
-    public PoolInfo[] pools;
-
-    // 풀 이름 → 해당 오브젝트 Queue
-    private Dictionary<string, Queue<GameObject>> poolDict;
+    public PoolInfo[] pools;        // Inspector에서 여러 풀 정보를 등록
+    private Dictionary<string, Queue<GameObject>> poolDict;     // 풀 이름 → 해당 오브젝트 Queue
 
     void Awake()
     {
-
-        // 풀들을 저장할 Dictionary 초기화
-        poolDict = new Dictionary<string, Queue<GameObject>>();
-
-        // 풀 정보 하나씩 처리
-        foreach (var pool in pools)
+        
+        poolDict = new Dictionary<string, Queue<GameObject>>(); // 풀들을 저장할 Dictionary 초기화
+        
+        foreach (var pool in pools)     // 풀 정보 하나씩 처리
         {
-            // 해당 프리팹용 Queue 생성
-            var queue = new Queue<GameObject>();
-
-            // 초기 개수만큼 미리 생성
-            for (int i = 0; i < pool.initialSize; i++)
+            var queue = new Queue<GameObject>();    // 해당 프리팹용 Queue 생성
+            
+            for (int i = 0; i < pool.initialSize; i++)  // 초기 개수만큼 미리 생성
             {
                 GameObject obj = Instantiate(pool.prefab);
 
                 // 반환 시 이름으로 풀을 구분하므로
                 // 반드시 prefabName으로 이름 통일
                 obj.name = pool.prefabName;
-
-                // 일단 비활성화
-                obj.SetActive(false);
-
-                // PoolManager 아래에 정리
-                obj.transform.SetParent(transform);
-
-                // 큐에 보관
-                queue.Enqueue(obj);
+                obj.SetActive(false);                   // 일단 비활성화
+                obj.transform.SetParent(transform);     // PoolManager 아래에 정리
+                queue.Enqueue(obj);                     // 큐에 보관
             }
-
-            // Dictionary에 등록
-            poolDict.Add(pool.prefabName, queue);
+            poolDict.Add(pool.prefabName, queue);       // Dictionary에 등록
         }
     }
 
@@ -71,16 +51,13 @@ public class PoolManager : MonoBehaviour
         }
 
         GameObject obj = null;
-
-        // 풀에 남은 오브젝트가 있으면 재사용
-        if (poolDict[prefabName].Count > 0)
-        {
+        
+        if (poolDict[prefabName].Count > 0)     // 풀에 남은 오브젝트가 있으면 재사용
             obj = poolDict[prefabName].Dequeue();
-        }
         else
         {
-            // 풀에 없으면 새로 생성 (예외 처리)
-            var poolInfo = System.Array.Find(pools, x => x.prefabName == prefabName);
+            var poolInfo = System.Array.Find(pools, x => x.prefabName == prefabName);   // 풀에 없으면 새로 생성 (예외 처리)
+
             if (poolInfo != null)
             {
                 obj = Instantiate(poolInfo.prefab);
@@ -90,16 +67,10 @@ public class PoolManager : MonoBehaviour
 
         if (obj == null) return null;
 
-        // 풀에서 꺼낸 오브젝트는 부모 해제
-        obj.transform.SetParent(null);
-
-        // 위치 / 회전 적용
-        obj.transform.position = pos;
+        obj.transform.SetParent(null);      // 풀에서 꺼낸 오브젝트는 부모 해제
+        obj.transform.position = pos;       // 위치 / 회전 적용
         obj.transform.rotation = rot;
-
-        // 활성화
-        obj.SetActive(true);
-
+        obj.SetActive(true);                // 활성화
         return obj;
     }
 
@@ -126,3 +97,7 @@ public class PoolManager : MonoBehaviour
         }
     }
 }
+
+// GameObject bullet = GameManager.Instance.poolManager.SpawnFromPool("Bullet", firePos.position, Quaternion.identity);
+// GameManager.Instance.poolManager.ReturnToPool(gameObject);
+

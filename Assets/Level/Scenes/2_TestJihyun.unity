@@ -21540,6 +21540,7 @@ MonoBehaviour:
   dialogSystem: {fileID: 0}
   cameraShake: {fileID: 2027666406}
   playerController: {fileID: 156809791}
+  playerInteraction: {fileID: 156809795}
   grapplingHook: {fileID: 156809794}
   playerStats: {fileID: 11400000, guid: 85d0ceea785f7de46a030e9444c1e8b4, type: 2}
   enemyStats: {fileID: 11400000, guid: f5685b396f0123743a5d84581880763e, type: 2}

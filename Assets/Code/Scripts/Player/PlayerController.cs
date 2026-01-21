@@ -15,9 +15,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	Rigidbody2D rigid;
 	SpriteRenderer sprite;
 	GrapplingHook grappling;
-
 	PlayerInteraction interaction;  // 상호작용
-	private Animator animator;      // 애니메이션
+	Animator animator;				// 애니메이션
 
 	public float maxTime;           // 땅에서 움직이지 않을 때 일정 시간 이후 Run에서 Idle
 	private float curTime;
@@ -26,9 +25,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
-		interaction = GetComponent<PlayerInteraction>();
 		animator = GetComponent<Animator>();
-		grappling = GameManager.Instance.grapplingHook;
+        interaction = GameManager.Instance.playerInteraction;
+        grappling = GameManager.Instance.grapplingHook;
 	}
 	void Start()
 	{

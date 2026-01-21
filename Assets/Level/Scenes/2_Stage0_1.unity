@@ -430,6 +430,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1941815247}
   m_SourcePrefab: {fileID: 100100000, guid: aacc80020f45af9459318ec226fa961d, type: 3}
+--- !u!114 &107788745 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4829653216477449006, guid: aacc80020f45af9459318ec226fa961d, type: 3}
+  m_PrefabInstance: {fileID: 107788744}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941815236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d334fe44497ba40ae018936610b47d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
 --- !u!1 &111794842
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +770,7 @@ MonoBehaviour:
   dialogSystem: {fileID: 0}
   cameraShake: {fileID: 1816539600}
   playerController: {fileID: 1941815241}
+  playerInteraction: {fileID: 107788745}
   grapplingHook: {fileID: 1941815240}
   playerStats: {fileID: 11400000, guid: 85d0ceea785f7de46a030e9444c1e8b4, type: 2}
   enemyStats: {fileID: 11400000, guid: f5685b396f0123743a5d84581880763e, type: 2}
