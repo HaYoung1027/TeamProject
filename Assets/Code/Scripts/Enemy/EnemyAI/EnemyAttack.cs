@@ -15,28 +15,30 @@ public class EnemyAttack : MonoBehaviour
     public Vector3 bulletPos;
     [Header("한 번 발사 후 다음 발사까지의 쿨타임")]
     public float coolTime;
-    private float currentTime;              // 현재 남아있는 쿨타임 시간
+    private float currentTime;
     [Header("적의 최초 위치 (복귀 지점)")]
     public Vector3 startPos;
     [Header("플레이어를 놓친 후 복귀를 시작하기까지의 대기 시간")]
     public float maxTime;
-    private float curTime;                  // 플레이어 미감지 상태에서 흐르는 시간
+    private float curTime;
     [Header("감지 후 발사까지 대기 시간")]
     public float detectDelay = 1.0f;
-    private float detectTimer = 0f;         // 감지 상태가 유지된 시간 누적용 타이머
+    private float detectTimer = 0f;
     [Header("발사 유지 시간")]
     public float attackWindowTime = 2f;
-    private float attackWindowTimer = 0f;   // 발사 가능 상태가 유지된 시간 누적용 타이머
+    private float attackWindowTimer = 0f;
     [Header("조준선이 깜빡이는 속도")]
     public float blinkSpeed = 6f;
     [Header("플레이어에게 붙는 조준 프리팹")]
     public GameObject aiming;
-    private GameObject currentAiming;       // 현재 생성되어 플레이어에게 붙어 있는 조준 오브젝트
-    private Transform enemyTransform;       // 적 자신의 Transform 위치
-    private Transform targetPlayer;         // 현재 타겟으로 잡힌 플레이어 Transform
-    private int moveDirection = 1;          // 적의 순찰 및 감지 방향 1: 오른쪽, -1: 왼쪽
-    private bool blinking = false;          // 조준선이 깜빡이는 상태인지 여부
-    LineRenderer line;                      // 플레이어와 적 사이를 잇는 조준선
+
+    private GameObject currentAiming;
+    private Transform enemyTransform;
+    private Transform targetPlayer;
+    private Transform targetAimPoint;
+    private int moveDirection = 1;
+    private bool blinking = false;
+    LineRenderer line;
 
     private bool isAttacking = false;
 
@@ -71,9 +73,10 @@ public class EnemyAttack : MonoBehaviour
         {
             curTime = 0;
             targetPlayer = raycast.collider.transform;
+            targetAimPoint = targetPlayer.Find("AimPoint");
         }
 
-        if (targetPlayer != null)
+        if (targetPlayer != null && targetAimPoint != null)
         {
             float dist = Vector2.Distance(transform.position, targetPlayer.position);
 
@@ -87,21 +90,25 @@ public class EnemyAttack : MonoBehaviour
             {
                 if (dist < atkDistince)
                 {
-                    Vector2 dir = (targetPlayer.position - enemyTransform.position).normalized;
+                    Vector2 origin = enemyTransform.position;
+                    Vector2 dir = (targetAimPoint.position - enemyTransform.position).normalized;
+                    float rayDistance = Vector2.Distance(origin, targetAimPoint.position);
+
+                    int mask = ~LayerMask.GetMask("Player", "Enemy");
 
                     RaycastHit2D hit = Physics2D.Raycast(
-                        enemyTransform.position,
+                        origin,
                         dir,
-                        atkDistince,
-                        ~LayerMask.GetMask("Enemy")
+                        rayDistance,
+                        mask
                     );
 
-                    line.SetPosition(0, enemyTransform.position);
+                    line.SetPosition(0, origin);
 
                     if (hit.collider != null)
                         line.SetPosition(1, hit.point);
                     else
-                        line.SetPosition(1, targetPlayer.position);
+                        line.SetPosition(1, targetAimPoint.position);
                 }
 
                 detectTimer += Time.deltaTime;
@@ -179,16 +186,15 @@ public class EnemyAttack : MonoBehaviour
         blinking = false;
         line.enabled = false;
         RemoveAiming();
-        targetPlayer = null;
         isAttacking = false;
     }
 
     void CreateAiming(Transform player)
     {
-        if (currentAiming == null)
+        if (currentAiming == null && targetAimPoint != null)
         {
             currentAiming = Instantiate(aiming);
-            currentAiming.transform.SetParent(player);
+            currentAiming.transform.SetParent(targetAimPoint);
             currentAiming.transform.localPosition = Vector3.zero;
             currentAiming.transform.localRotation = Quaternion.identity;
         }
@@ -207,6 +213,7 @@ public class EnemyAttack : MonoBehaviour
     {
         RemoveAiming();
         targetPlayer = null;
+        targetAimPoint = null;
         isAttacking = false;
     }
 
@@ -214,6 +221,7 @@ public class EnemyAttack : MonoBehaviour
     {
         RemoveAiming();
         targetPlayer = null;
+        targetAimPoint = null;
         isAttacking = false;
     }
 }
