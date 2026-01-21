@@ -7,7 +7,7 @@ public class EnemyBullet : MonoBehaviour
 
     private Vector2 moveDir;
 
-    void Start()
+    void OnEnable()
     {
         // 발사 순간 플레이어 방향 고정
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -20,7 +20,14 @@ public class EnemyBullet : MonoBehaviour
         float angle = Mathf.Atan2(moveDir.y, moveDir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-        Destroy(gameObject, lifeTime);
+        // 생존 시간 후 풀로 반환
+        Invoke(nameof(ReturnToPool), lifeTime);
+    }
+
+    void OnDisable()
+    {
+        // 풀에서 다시 꺼낼 때 중복 Invoke 방지
+        CancelInvoke();
     }
 
     void Update()
@@ -33,8 +40,13 @@ public class EnemyBullet : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("플레이어 피격!");
-            // TODO : 플레이어 데미지 처리
-            Destroy(gameObject);
+            // TODO : 데미지 처리
+            ReturnToPool();
         }
+    }
+
+    void ReturnToPool()
+    {
+        GameManager.Instance.poolManager.ReturnToPool(gameObject);
     }
 }

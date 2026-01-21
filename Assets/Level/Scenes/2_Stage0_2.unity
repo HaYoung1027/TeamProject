@@ -13888,6 +13888,9 @@ MonoBehaviour:
   - prefabName: Enemy
     prefab: {fileID: 3003946853895381594, guid: 8627c92cd02297a4cb5ef0b342ee4a40, type: 3}
     initialSize: 200
+  - prefabName: Bullet
+    prefab: {fileID: 8741880085119485871, guid: df16ce6baba54fb438ce16b3598d1684, type: 3}
+    initialSize: 200
 --- !u!1 &887824667
 GameObject:
   m_ObjectHideFlags: 0

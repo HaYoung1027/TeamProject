@@ -98,7 +98,7 @@ public class EnemyAttack : MonoBehaviour
                     }
                     else if (currentTime <= 0)
                     {
-                        Instantiate(bullet, transform.position + bulletPos, transform.rotation);
+                        GameManager.Instance.poolManager.SpawnFromPool("Bullet", transform.position + bulletPos, transform.rotation);
                         currentTime = coolTime;
                         RemoveAiming();
                     }
