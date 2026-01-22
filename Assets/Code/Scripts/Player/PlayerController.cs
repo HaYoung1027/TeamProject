@@ -37,7 +37,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     void Update()
     {
-        if (TimelineController.isTimelinePlaying) return;	 // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+        if (TimelineController.isTimelinePlaying)
+        {
+            inputVec = Vector2.zero;
+            return;   // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+        }
         UpdateAnimation(); // 애니메이션
     }
     void FixedUpdate()
@@ -86,9 +90,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void OnJump()
 	{
-		if (TimelineController.isTimelinePlaying) return;   // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
-															// 플레이어가 바닥이 아닐 경우
-		if (!isGrounded) return;
+		if (TimelineController.isTimelinePlaying)
+		{
+			inputVec = Vector2.zero;
+			return;   // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+		}
+											   // 플레이어가 바닥이 아닐 경우
+			if (!isGrounded) return;
 
 		GameManager.Instance.audioManager.PlayJumpSound(1f);
 		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
@@ -115,7 +123,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void OnMove(InputValue value)
 	{
-        if (TimelineController.isTimelinePlaying) return;    // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+        if (TimelineController.isTimelinePlaying)
+        {
+            inputVec = Vector2.zero;
+            return;   // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
+        }
         inputVec = value.Get<Vector2>();
 	}
 
@@ -157,7 +169,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// 애니메이션 업데이트
 	void UpdateAnimation()
 	{
-        if (TimelineController.isTimelinePlaying) return;    // 컷씬 재생 중일 때는 플레이어 컨트롤 불가
         if (isGrounded)
 		{
             // 플레이어가 가만히 있을 때
