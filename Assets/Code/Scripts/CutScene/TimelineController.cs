@@ -7,7 +7,7 @@ public class TimelineController : MonoBehaviour
 
     PlayableDirector director;
 
-    public GameObject objectToEnable;
+    public GameObject[] objectsToEnable;
 
     void Awake()
     {
@@ -35,9 +35,13 @@ public class TimelineController : MonoBehaviour
     {
         isTimelinePlaying = false;
 
-        if (objectToEnable != null)
+        if (objectsToEnable != null)
         {
-            objectToEnable.SetActive(true);
+            foreach (GameObject obj in objectsToEnable)
+            {
+                if (obj != null)
+                    obj.SetActive(true);
+            }
         }
     }
 }
