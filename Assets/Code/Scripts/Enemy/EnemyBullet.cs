@@ -41,6 +41,7 @@ public class EnemyBullet : MonoBehaviour
         {
             Debug.Log("플레이어 피격!");
             // TODO : 데미지 처리
+            GameManager.Instance.playerController.TakeDamage(1);
             ReturnToPool();
         }
 
