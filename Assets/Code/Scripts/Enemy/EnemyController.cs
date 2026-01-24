@@ -22,18 +22,16 @@ public class EnemyController : MonoBehaviour
 		damageable = GetComponent<Enemy>();
 	}
 
-    private void Start()
+    void Start()
     {
         isGrounded = true;
     }
 
-    private void Update()
+    void Update()
 	{
         if (isGrounded && rigid.linearVelocity == Vector2.zero)
-        {
             gameObject.tag = "Enemy";
-        }
-	}
+    }
     public void CheckGround(Collision2D collision)
     {
         // ¹Ù´Ú Ã¼Å©

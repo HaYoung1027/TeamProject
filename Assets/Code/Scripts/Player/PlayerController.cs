@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 using playerState = EnumType.PlayerState;
@@ -16,10 +17,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 	SpriteRenderer sprite;
 	GrapplingHook grappling;
 	PlayerInteraction interaction;  // 상호작용
-	Animator animator;				// 애니메이션
+	Animator animator;              // 애니메이션
+    private Coroutine damageCanvasCoroutine;
 
-	public float maxTime;           // 땅에서 움직이지 않을 때 일정 시간 이후 Run에서 Idle
+    public float maxTime;           // 땅에서 움직이지 않을 때 일정 시간 이후 Run에서 Idle
 	private float curTime;
+	public Canvas damagedCanvas;
 
 	void Awake()
 	{
@@ -32,7 +35,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	void Start()
 	{
 		isGrounded = true;
-		SetPlayerState(playerState.Idle);
+        damagedCanvas.enabled = false;
+        SetPlayerState(playerState.Idle);
 	}
 
     void Update()
@@ -131,15 +135,28 @@ public class PlayerController : MonoBehaviour, IDamageable
         inputVec = value.Get<Vector2>();
 	}
 
-	// 플레이어 데미지
-	public void TakeDamage(int attack)
-	{
-		// 플레이어 체력 줄어들기
-		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
-	}
+    // 플레이어 데미지
+    public void TakeDamage(int attack)
+    {
+        // 체력 감소
+        GameManager.Instance.playerStatsRuntime.currentHP -= attack;
 
-	// 바닥 체크
-	public void CheckGround(Collision2D collision)
+        // 이미 실행 중이면 중단 (연속 피격 대응)
+        if (damageCanvasCoroutine != null)
+            StopCoroutine(damageCanvasCoroutine);
+
+        damageCanvasCoroutine = StartCoroutine(ShowDamagedCanvas());
+    }
+
+    IEnumerator ShowDamagedCanvas()
+    {
+        damagedCanvas.enabled = true;
+        yield return new WaitForSeconds(1f);
+        damagedCanvas.enabled = false;
+    }
+
+    // 바닥 체크
+    public void CheckGround(Collision2D collision)
 	{
 		// 바닥 체크
 		foreach (var contact in collision.contacts)
