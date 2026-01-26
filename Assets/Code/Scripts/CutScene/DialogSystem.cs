@@ -45,7 +45,10 @@ public class DialogSystem : MonoBehaviour
 
     Coroutine typingCoroutine;
 
-	void Update()
+    public int cutscenePlayerIndex = 0; // 컷신용 플레이어 대사 인덱스
+    int cutsceneNPCIndex = 0;           // 컷신용 NPC 대사 인덱스
+
+    void Update()
     {
         if (!isAction) return;
 
@@ -115,7 +118,7 @@ public class DialogSystem : MonoBehaviour
             return;
         }
 
-        StartDialog();
+        StartDialog(currentDialogIndex);
     }
 
     public void Action()
@@ -126,7 +129,7 @@ public class DialogSystem : MonoBehaviour
         {
             talkPanel.SetActive(true);
             currentDialogIndex = 0;
-            StartDialog();
+            StartDialog(currentDialogIndex);
         }
         else
         {
@@ -134,12 +137,63 @@ public class DialogSystem : MonoBehaviour
             talkPanel.SetActive(false);
         }
     }
-    void StartDialog()
+    void StartDialog(int index)
     {
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
 
-        typingCoroutine = StartCoroutine(TypeText(dialogList[currentDialogIndex]));
+        typingCoroutine = StartCoroutine(TypeText(dialogList[index]));
+    }
+
+    // 컷신 시작
+    public void StartCutscenePlayerDialog()
+    {
+        isAction = true;
+        talkPanel.SetActive(true);
+
+        StartDialog(cutscenePlayerIndex);
+    }
+
+    public void StartCutsceneNPCDialog()
+    {
+        isAction = true;
+        talkPanel.SetActive(true);
+
+        StartDialog(cutsceneNPCIndex);
+    }
+
+
+    // 컷신 다음 대사
+    public void NextCutscenePlayerDialog()
+    {
+        cutscenePlayerIndex++;
+        StartDialog(cutscenePlayerIndex);
+    }
+
+    public void NextCutsceneNPCDialog()
+    {
+        cutsceneNPCIndex++;
+        StartDialog(cutsceneNPCIndex);
+    }
+
+
+    // 컷신 종료
+    public void EndCutscenePlayerDialog()
+    {
+        cutscenePlayerIndex++;
+        EndCutsceneDialog();
+    }
+
+    public void EndCutsceneNPCDialog()
+    {
+        cutsceneNPCIndex++;
+        EndCutsceneDialog();
+    }
+    public void EndCutsceneDialog()
+    {
+        isAction = false;           // 대사 시스템 OFF
+        talkPanel.SetActive(false); // 말풍선 끄기
+        StopAllCoroutines();        // 타이핑 코루틴 종료
     }
 
 
