@@ -5,7 +5,7 @@ public class TestHooking : MonoBehaviour
 {
 	public Vector2 destiny;
 	public float speed = 1f;		// TODO: 스크립터블 오브젝트에 있는 speed로 사용하기
-	public float distance = 0.1f;	// TODO: 스크립터블 오브젝트에 있는 값으로 사용하기
+	public float distance = 2f;		// TODO: 스크립터블 오브젝트에 있는 값으로 사용하기
 	bool isAttach = false;          // 플레이어가 갈고리를 사용했는지
 
 	[Header("노드 프리펩")] public GameObject nodePrefab;   // 노드 프리펩
@@ -29,7 +29,7 @@ public class TestHooking : MonoBehaviour
 	{
 		transform.position = Vector2.MoveTowards(transform.position, destiny, speed);
 
-		// 플레이어가 이동중인지 확인
+		// 훅이 이동중인지 확인
 		if ((Vector2)transform.position != destiny)
 		{
 			// 두 벡터 사이의 거리 확인
