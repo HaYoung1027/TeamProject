@@ -36,4 +36,12 @@ public class Globals
 		// NPC
 		public static readonly string npc = "NPC";
 	}
+
+	// 갈고리 관련 수치값(int, float) 클래스
+	public static class HookValue
+	{
+		public static readonly int minDistanceLimit = 2;  // 갈고리 최소 길이 (이하이면 보정)
+		public static readonly int minClampDistance = 4;	// 갈고리 보정 길이 (이하일 경우 보정되는 거리)
+		//public static readonly float 
+	}
 }

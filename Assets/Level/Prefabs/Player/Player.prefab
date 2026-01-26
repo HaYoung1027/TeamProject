@@ -33,7 +33,7 @@ RectTransform:
   m_Father: {fileID: 2484898502348230806}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -204,7 +204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2017318300651825102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -304,7 +304,6 @@ GameObject:
   - component: {fileID: 4756874103759277193}
   - component: {fileID: 1031755658764454315}
   - component: {fileID: 4829653216477449006}
-  - component: {fileID: 461583872554884000}
   - component: {fileID: 6149842786633117584}
   m_Layer: 6
   m_Name: Player
@@ -495,8 +494,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96080ce099ea71e4088789d1539497b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hook
+  mainCam: {fileID: 0}
   globalVolume: {fileID: 0}
   line: {fileID: 0}
+  visualizerLine: {fileID: 0}
   hook: {fileID: 0}
   isHookActive: 0
   isLineMax: 0
@@ -524,20 +525,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d334fe44497ba40ae018936610b47d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
---- !u!114 &461583872554884000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7270546194825118783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3899d5b698d2fbb4ca12f55745e5a7b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CursorPathMarking
-  mainCam: {fileID: 0}
-  visualizerLine: {fileID: 0}
 --- !u!70 &6149842786633117584
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

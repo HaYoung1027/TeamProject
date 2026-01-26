@@ -9,62 +9,62 @@ using tagName = Globals.TagName;
 
 public class GrapplingHook : MonoBehaviour
 {
-    [Header("메인 카메라")]
-    public Camera mainCam;
-    [Header("Global Volume 오브젝트")]
-    public Volume globalVolume;
-    [Header("Line 오브젝트 LineRenderer")]
-    public LineRenderer line;
-    [Header("visualizerLine 오브젝트 LineRenderer")]
-    public LineRendererAtoB visualizerLine;
-    [Header("Hook 오브젝트 Transform")]
-    public Transform hook;
-    [Header("훅 활성화 상태 여부")]
-    public bool isHookActive;
-    [Header("그래플링 훅 길이가 최대인지")]
+	[Header("메인 카메라")]
+	public Camera mainCam;
+	[Header("Global Volume 오브젝트")]
+	public Volume globalVolume;
+	[Header("Line 오브젝트 LineRenderer")]
+	public LineRenderer line;
+	[Header("visualizerLine 오브젝트 LineRenderer")]
+	public LineRendererAtoB visualizerLine;
+	[Header("Hook 오브젝트 Transform")]
+	public Transform hook;
+	[Header("훅 활성화 상태 여부")]
+	public bool isHookActive;
+	[Header("그래플링 훅 길이가 최대인지")]
 	public bool isLineMax;
-    [Header("그래플링 훅 사용 중인지 여부")]
-    public bool isAttach;
-    [Header("그래플링 훅으로 무언가를 잡았는지 여부")]
-    public bool isAttachElement;
-    [Header("슬로우 비율")]
-    public float slowFactor;
-    [Header("원래 속도로 복귀하는 데 걸리는 시간")]
-    public float slowLength;
-    [Header("오프셋 (잡힌 오브젝트 이동 보정값)")]
-    public Vector3 followOffset = new Vector3(1f, 0f, 0f);  // 기본값: (1, 0, 0)
-    [Header("회전 에너지 게이지 UI")]
-    public Slider swingGauge;
-    [Header("저장가능한 최대 회전 수(에너지 제한)")]
-    public int maxTurns = 1;
-    [Header("회전 중이지 않을 때 게이지 감소 속도")]
-    public float decreaseSpeed = 400f;
-    [Header("회전할 때 회전량 증가 배율")]
-    public float increaseMultiplier = 1.0f;
-    [Header("회전으로 인정할 최소 각도 변화")]
-    public float turnMinDelta = 0.3f;
-    [Header("속도 증가 배율")]
-    public float boostMultiplier = 1.5f;
-    [Header("Boost 지속 시간")]
-    public float boostDuration = 0.5f;
+	[Header("그래플링 훅 사용 중인지 여부")]
+	public bool isAttach;
+	[Header("그래플링 훅으로 무언가를 잡았는지 여부")]
+	public bool isAttachElement;
+	[Header("슬로우 비율")]
+	public float slowFactor;
+	[Header("원래 속도로 복귀하는 데 걸리는 시간")]
+	public float slowLength;
+	[Header("오프셋 (잡힌 오브젝트 이동 보정값)")]
+	public Vector3 followOffset = new Vector3(1f, 0f, 0f);  // 기본값: (1, 0, 0)
+	[Header("회전 에너지 게이지 UI")]
+	public Slider swingGauge;
+	[Header("저장가능한 최대 회전 수(에너지 제한)")]
+	public int maxTurns = 1;
+	[Header("회전 중이지 않을 때 게이지 감소 속도")]
+	public float decreaseSpeed = 400f;
+	[Header("회전할 때 회전량 증가 배율")]
+	public float increaseMultiplier = 1.0f;
+	[Header("회전으로 인정할 최소 각도 변화")]
+	public float turnMinDelta = 0.3f;
+	[Header("속도 증가 배율")]
+	public float boostMultiplier = 1.5f;
+	[Header("Boost 지속 시간")]
+	public float boostDuration = 0.5f;
 
-    private Vector2 mousedir;
-    private bool hasShakedOnAttach = false;
+	private Vector2 mousedir;
+	private bool hasShakedOnAttach = false;
 	private bool hasPlayedAttachSound = false;
 	private bool isPlayedDraftSound = false;
-    private float distance = 0f;                            // 표시선 길이
-    private float accumulatedAngle = 0f;                    // 누적 회전량(게이지 수치)
-    private float maxAngle;                                 // maxTurns 회전 시 최대 각도(= 360 * maxTurns)
-    private float previousAngle;                            // 이전 프레임의 각도
-    private bool angleInitialized = false;                  // 첫 프레임 각도 초기화 여부
-    private int storedDirection = 0;                        // 저장된 회전 방향(1=시계, -1=반시계, 0=없음)
-    private Coroutine currentBoost;
-    private Coroutine slowCoroutine;                        // 슬로우 효과 코루틴
+	private float distance = 0f;                            // 표시선 길이
+	private float accumulatedAngle = 0f;                    // 누적 회전량(게이지 수치)
+	private float maxAngle;                                 // maxTurns 회전 시 최대 각도(= 360 * maxTurns)
+	private float previousAngle;                            // 이전 프레임의 각도
+	private bool angleInitialized = false;                  // 첫 프레임 각도 초기화 여부
+	private int storedDirection = 0;                        // 저장된 회전 방향(1=시계, -1=반시계, 0=없음)
+	private Coroutine currentBoost;
+	private Coroutine slowCoroutine;                        // 슬로우 효과 코루틴
 	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
 	private DistanceJoint2D hookJoint;
-	ColorAdjustments colorAdjustments;
-	List<Transform> hookingList = new List<Transform>();    // 그래플링 훅으로 잡은 요소 리스트
+	private ColorAdjustments colorAdjustments;
+	private List<Transform> hookingList = new List<Transform>();    // 그래플링 훅으로 잡은 요소 리스트
 
 	private void Awake()
 	{
@@ -85,9 +85,9 @@ public class GrapplingHook : MonoBehaviour
 		isAttach = false;
 		hook.gameObject.SetActive(false);
 		hookJoint = hook.GetComponent<DistanceJoint2D>();
-        distance = GameManager.Instance.playerStats.hookDistance;
+		distance = GameManager.Instance.playerStats.hookDistance;
 
-        if (globalVolume == null)
+		if (globalVolume == null)
 		{
 			Debug.LogError("Global Volume이 할당되지 않았음");
 			return;
@@ -100,251 +100,251 @@ public class GrapplingHook : MonoBehaviour
 	{
 		if (TimelineController.isTimelinePlaying) return;   // 컷씬 재생 중일 때는 갈고리 불가
 
-        UpdateLine();
-        HandleHookShoot();
+		UpdateLine();
+		HandleHookShoot();
 		HandleHookMove();
-        HandleAttachState();
-        HandleSwingGauge();
-        HandleThrow();
-        CursorPathMarking();
-    }
+		HandleAttachState();
+		HandleSwingGauge();
+		HandleThrow();
+		CursorPathMarking();
+	}
 
 	void LateUpdate()
 	{
 		MoveElementPos();
 	}
 
-    void UpdateLine() // 라인 업데이트
-    {
-        line.SetPosition(0, transform.position);
-        line.SetPosition(1, hook.position);
-    }
+	void UpdateLine() // 라인 업데이트
+	{
+		line.SetPosition(0, transform.position);
+		line.SetPosition(1, hook.position);
+	}
 	void HandleHookShoot() // 훅 발사 입력처리
 	{
-        if (Mouse.current.leftButton.wasPressedThisFrame && !isHookActive && !isAttach)
-        {
-            GameManager.Instance.cameraShake.ShakeForSeconds(0.1f); // 카메라 흔들기
-            GameManager.Instance.audioManager.HookShootSound(0.7f); // 갈고리 발사 효과음
-            hook.position = transform.position;
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            mouseWorldPos.z = 0f;
+		if (Mouse.current.leftButton.wasPressedThisFrame && !isHookActive && !isAttach)
+		{
+			GameManager.Instance.cameraShake.ShakeForSeconds(0.1f); // 카메라 흔들기
+			GameManager.Instance.audioManager.HookShootSound(0.7f); // 갈고리 발사 효과음
+			hook.position = transform.position;
+			Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+			mouseWorldPos.z = 0f;
 
-            mousedir = mouseWorldPos - transform.position;
-            isHookActive = true;
-            hook.gameObject.SetActive(true);
-            line.enabled = true;
-        }
-    }
+			mousedir = mouseWorldPos - transform.position;
+			isHookActive = true;
+			hook.gameObject.SetActive(true);
+			line.enabled = true;
+		}
+	}
 
-    void HandleHookMove() // 훅 이동 / 복귀 처리
-    {
-        if (!isHookActive || isAttach) return; // 훅이 발사된 상태이고, 아직 최대 사거리에 도달하지 않았을 때
+	void HandleHookMove() // 훅 이동 / 복귀 처리
+	{
+		if (!isHookActive || isAttach) return; // 훅이 발사된 상태이고, 아직 최대 사거리에 도달하지 않았을 때
 
-        if (!isLineMax)
-        {
+		if (!isLineMax)
+		{
 			// 마우스 방향으로 훅을 전진시킴
-            hook.Translate(mousedir.normalized * Time.deltaTime * GameManager.Instance.playerStatsRuntime.hookSpeed);
-            // 플레이어와 훅 사이의 거리가 최대 사거리보다 커지면
-            if (Vector2.Distance(transform.position, hook.position) > GameManager.Instance.playerStatsRuntime.hookDistance)
-                isLineMax = true;   // 최대 사거리 도달 상태로 전환
-        }
-        else    // 훅이 최대 사거리에 도달한 이후
-        {
-            // 훅을 플레이어 위치로 부드럽게 되돌림
-            hook.position = Vector2.MoveTowards(hook.position, transform.position, Time.deltaTime * GameManager.Instance.playerStatsRuntime.hookSpeed);
-            if (Vector2.Distance(transform.position, hook.position) < 0.1f)     // 훅이 거의 플레이어 위치까지 돌아왔을 경우
-            {
-                // 훅 상태 초기화
-                isHookActive = false;
-                isLineMax = false;
-                hook.gameObject.SetActive(false);
-            }
-        }
-    }
+			hook.Translate(mousedir.normalized * Time.deltaTime * GameManager.Instance.playerStatsRuntime.hookSpeed);
+			// 플레이어와 훅 사이의 거리가 최대 사거리보다 커지면
+			if (Vector2.Distance(transform.position, hook.position) > GameManager.Instance.playerStatsRuntime.hookDistance)
+				isLineMax = true;   // 최대 사거리 도달 상태로 전환
+		}
+		else    // 훅이 최대 사거리에 도달한 이후
+		{
+			// 훅을 플레이어 위치로 부드럽게 되돌림
+			hook.position = Vector2.MoveTowards(hook.position, transform.position, Time.deltaTime * GameManager.Instance.playerStatsRuntime.hookSpeed);
+			if (Vector2.Distance(transform.position, hook.position) < 0.1f)     // 훅이 거의 플레이어 위치까지 돌아왔을 경우
+			{
+				// 훅 상태 초기화
+				isHookActive = false;
+				isLineMax = false;
+				hook.gameObject.SetActive(false);
+			}
+		}
+	}
 
-    void HandleAttachState() // 그래플링 붙어 있을 때 처리
-    {
-        if (!isAttach) return;
-        
-        if (!hasPlayedAttachSound)      // 갈고리 or 적에 처음 붙었을 때
-        {
-            GameManager.Instance.audioManager.HookAttachSound(1f);
-            hasPlayedAttachSound = true;
-        }
+	void HandleAttachState() // 그래플링 붙어 있을 때 처리
+	{
+		if (!isAttach) return;
 
-        if (!hasShakedOnAttach)
-        {
-            GameManager.Instance.cameraShake.ShakeForSeconds(0.1f);
-            hasShakedOnAttach = true;
-        }
-        HandleDetachInput();
-        HandleRopeDraft();
-    }
+		if (!hasPlayedAttachSound)      // 갈고리 or 적에 처음 붙었을 때
+		{
+			GameManager.Instance.audioManager.HookAttachSound(1f);
+			hasPlayedAttachSound = true;
+		}
 
-    void HandleDetachInput() // 붙은 상태에서 해제 처리
-    {
-        if (!Mouse.current.leftButton.wasReleasedThisFrame) return;     // 마우스를 땠을 때만 해제
+		if (!hasShakedOnAttach)
+		{
+			GameManager.Instance.cameraShake.ShakeForSeconds(0.1f);
+			hasShakedOnAttach = true;
+		}
+		HandleDetachInput();
+		HandleRopeDraft();
+	}
 
-        isAttach = false;
-        isHookActive = false;
-        isLineMax = false;
-        hasShakedOnAttach = false;
-        hasPlayedAttachSound = false;
+	void HandleDetachInput() // 붙은 상태에서 해제 처리
+	{
+		if (!Mouse.current.leftButton.wasReleasedThisFrame) return;     // 마우스를 땠을 때만 해제
 
-        hook.GetComponent<Hooking>().joint2D.enabled = false;
-        hook.gameObject.SetActive(false);
+		isAttach = false;
+		isHookActive = false;
+		isLineMax = false;
+		hasShakedOnAttach = false;
+		hasPlayedAttachSound = false;
 
-        if (slowCoroutine != null)
-            StopCoroutine(slowCoroutine);
+		hook.GetComponent<Hooking>().joint2D.enabled = false;
+		hook.gameObject.SetActive(false);
 
-        slowCoroutine = StartCoroutine(SlowRoutine());
-        Boost(GetGaugePercent());
-    }
+		if (slowCoroutine != null)
+			StopCoroutine(slowCoroutine);
 
-    void HandleRopeDraft() // 줄 당기기 처리
-    {
-        if (Keyboard.current.spaceKey.isPressed)    // 스페이스 줄 당기기
-        {
-            if (hookJoint != null && hookJoint.enabled)
-            {
-                hookJoint.distance = Mathf.Max(0.5f, hookJoint.distance - 0.1f);
+		slowCoroutine = StartCoroutine(SlowRoutine());
+		Boost(GetGaugePercent());
+	}
 
-                if (!isPlayedDraftSound)
-                {
-                    GameManager.Instance.audioManager.HookDraftSound(1f);
-                    isPlayedDraftSound = true;
-                }
-            }
-        }
-        if (Keyboard.current.spaceKey.wasReleasedThisFrame)
-        {
-            GameManager.Instance.audioManager.StopSFX();
-            isPlayedDraftSound = false;
-        }
-    }
+	void HandleRopeDraft() // 줄 당기기 처리
+	{
+		if (Keyboard.current.spaceKey.isPressed)    // 스페이스 줄 당기기
+		{
+			if (hookJoint != null && hookJoint.enabled)
+			{
+				hookJoint.distance = Mathf.Max(0.5f, hookJoint.distance - 0.1f);
 
-    void HandleSwingGauge() // 회전 게이지 처리 분리
-    {
-        if (!isAttach)
-        {
-            ResetSwingGauge();
-            return;
-        }
+				if (!isPlayedDraftSound)
+				{
+					GameManager.Instance.audioManager.HookDraftSound(1f);
+					isPlayedDraftSound = true;
+				}
+			}
+		}
+		if (Keyboard.current.spaceKey.wasReleasedThisFrame)
+		{
+			GameManager.Instance.audioManager.StopSFX();
+			isPlayedDraftSound = false;
+		}
+	}
 
-        swingGauge.gameObject.SetActive(true);  // 게이지 UI 활성화 
+	void HandleSwingGauge() // 회전 게이지 처리 분리
+	{
+		if (!isAttach)
+		{
+			ResetSwingGauge();
+			return;
+		}
 
-        bool noInput = GameManager.Instance.playerController.inputVec == Vector2.zero;
-        Vector2 hookPos = hook.position;        // 갈고리(회전 중심) 좌표
-        Vector2 playerPos = transform.position; // 플레이어 좌표
-        Vector2 dir = (playerPos - hookPos).normalized; // 갈고리 -> 플레이어 방향 벡터
-        float angleNow = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; // 현재 각도(0~360°)
+		swingGauge.gameObject.SetActive(true);  // 게이지 UI 활성화 
 
-        // 첫 프레임에서는 이전 각도가 없으므로 초기화
-        if (!angleInitialized)
-        {
-            previousAngle = angleNow;
-            angleInitialized = true;
-        }
+		bool noInput = GameManager.Instance.playerController.inputVec == Vector2.zero;
+		Vector2 hookPos = hook.position;        // 갈고리(회전 중심) 좌표
+		Vector2 playerPos = transform.position; // 플레이어 좌표
+		Vector2 dir = (playerPos - hookPos).normalized; // 갈고리 -> 플레이어 방향 벡터
+		float angleNow = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; // 현재 각도(0~360°)
 
-        // 프레임 간 각도 변화 계산 (360° 넘어가도 정확하게 처리)
-        float delta = Mathf.DeltaAngle(previousAngle, angleNow);
-        previousAngle = angleNow; // 현재 각도를 다음 프레임을 위해 저장
-        ProcessSwingDelta(delta, noInput);
-        accumulatedAngle = Mathf.Clamp(accumulatedAngle, 0, maxAngle);
-        swingGauge.value = accumulatedAngle / maxAngle;
-    }
+		// 첫 프레임에서는 이전 각도가 없으므로 초기화
+		if (!angleInitialized)
+		{
+			previousAngle = angleNow;
+			angleInitialized = true;
+		}
 
-    void ProcessSwingDelta(float delta, bool noInput)
-    {
-        // delta가 충분히 크면 "회전 중"으로 처리
-        if (Mathf.Abs(delta) <= turnMinDelta)
-        {
-            accumulatedAngle -= decreaseSpeed * Time.deltaTime;
-            if (accumulatedAngle <= 0)
-            {
-                accumulatedAngle = 0;
-                storedDirection = 0;
-            }
-            return;
-        }
+		// 프레임 간 각도 변화 계산 (360° 넘어가도 정확하게 처리)
+		float delta = Mathf.DeltaAngle(previousAngle, angleNow);
+		previousAngle = angleNow; // 현재 각도를 다음 프레임을 위해 저장
+		ProcessSwingDelta(delta, noInput);
+		accumulatedAngle = Mathf.Clamp(accumulatedAngle, 0, maxAngle);
+		swingGauge.value = accumulatedAngle / maxAngle;
+	}
 
-        int deltaDir = delta > 0 ? 1 : -1; // 회전 방향 판단
+	void ProcessSwingDelta(float delta, bool noInput)
+	{
+		// delta가 충분히 크면 "회전 중"으로 처리
+		if (Mathf.Abs(delta) <= turnMinDelta)
+		{
+			accumulatedAngle -= decreaseSpeed * Time.deltaTime;
+			if (accumulatedAngle <= 0)
+			{
+				accumulatedAngle = 0;
+				storedDirection = 0;
+			}
+			return;
+		}
 
-        // 회전 방향이 처음 결정되는 순간
-        if (storedDirection == 0)
-            storedDirection = deltaDir;
+		int deltaDir = delta > 0 ? 1 : -1; // 회전 방향 판단
 
-        if (deltaDir == storedDirection)
-        {
-            if (noInput)                    // 입력 없을 때
-                accumulatedAngle += decreaseSpeed * Time.deltaTime * 0.05f;
-            else                            // 같은 방향으로 돌면 -> 게이지 증가   
-                accumulatedAngle += Mathf.Abs(delta) * increaseMultiplier;      
-        }
-        else                                // 반대 방향으로 돌면 -> 게이지 감소
-        {
-            accumulatedAngle -= Mathf.Abs(delta) * increaseMultiplier * 1.5f;
+		// 회전 방향이 처음 결정되는 순간
+		if (storedDirection == 0)
+			storedDirection = deltaDir;
 
-            if (accumulatedAngle <= 0f)     // 감소하다가 0 이하가 되면 방향 초기화
-            {
-                accumulatedAngle = 0;
-                storedDirection = 0;
-            }
-        }
-    }
+		if (deltaDir == storedDirection)
+		{
+			if (noInput)                    // 입력 없을 때
+				accumulatedAngle += decreaseSpeed * Time.deltaTime * 0.05f;
+			else                            // 같은 방향으로 돌면 -> 게이지 증가   
+				accumulatedAngle += Mathf.Abs(delta) * increaseMultiplier;
+		}
+		else                                // 반대 방향으로 돌면 -> 게이지 감소
+		{
+			accumulatedAngle -= Mathf.Abs(delta) * increaseMultiplier * 1.5f;
 
-    void ResetSwingGauge()
-    {
-        // 갈고리에서 떨어지면 모든 값 초기화
-        swingGauge.gameObject.SetActive(false); // 게이지 숨기기
-        accumulatedAngle = 0f;                  // 회전량 초기화
-        swingGauge.value = 0f;                  // UI 리셋
-        angleInitialized = false;               // 다음 회전 때 새 초기화 필요
-        storedDirection = 0;                    // 방향 초기화
-    }
+			if (accumulatedAngle <= 0f)     // 감소하다가 0 이하가 되면 방향 초기화
+			{
+				accumulatedAngle = 0;
+				storedDirection = 0;
+			}
+		}
+	}
 
-    void HandleThrow() // 던지기 처리 분리
-    {
-        if (!isAttachElement) return;           // 적 또는 오브젝트 던지기
+	void ResetSwingGauge()
+	{
+		// 갈고리에서 떨어지면 모든 값 초기화
+		swingGauge.gameObject.SetActive(false); // 게이지 숨기기
+		accumulatedAngle = 0f;                  // 회전량 초기화
+		swingGauge.value = 0f;                  // UI 리셋
+		angleInitialized = false;               // 다음 회전 때 새 초기화 필요
+		storedDirection = 0;                    // 방향 초기화
+	}
 
-        if (Mouse.current.rightButton.wasPressedThisFrame)
-        {
-            Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            Vector2 dir = mouseWorld - (Vector2)transform.position;
-            ThrowElement(hookingList[0], dir);
-            line.enabled = true;
-            resetHook();                        // 훅 상태 초기화
-        }
-    }
+	void HandleThrow() // 던지기 처리 분리
+	{
+		if (!isAttachElement) return;           // 적 또는 오브젝트 던지기
 
-    void MoveElementPos()   // 적 및 오브젝트 위치 이동하기
-    {
+		if (Mouse.current.rightButton.wasPressedThisFrame)
+		{
+			Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+			Vector2 dir = mouseWorld - (Vector2)transform.position;
+			ThrowElement(hookingList[0], dir);
+			line.enabled = true;
+			resetHook();                        // 훅 상태 초기화
+		}
+	}
+
+	void MoveElementPos()   // 적 및 오브젝트 위치 이동하기
+	{
 		if (!isAttachElement) return;
 		MovePos();
 	}
 
 	public void AttachElement(Transform element)    // 잡기
-    {
+	{
 		if (hookingList.Contains(element) || isAttachElement) return;
 
-        EnemyAttack enemyAttack = element.GetComponent<EnemyAttack>();
-        if (enemyAttack != null)
-            enemyAttack.isGrabbed = true;
+		EnemyAttack enemyAttack = element.GetComponent<EnemyAttack>();
+		if (enemyAttack != null)
+			enemyAttack.isGrabbed = true;
 
-        EnemyController enemyController = element.GetComponent<EnemyController>();
-        if (enemyController != null)
-            enemyController.isGrounded = false;
+		EnemyController enemyController = element.GetComponent<EnemyController>();
+		if (enemyController != null)
+			enemyController.isGrounded = false;
 
-        hookingList.Add(element);   // 리스트에 추가하기
+		hookingList.Add(element);   // 리스트에 추가하기
 		Collider2D elementCol = element.GetComponent<Collider2D>();
 		Collider2D playerCol = GetComponent<Collider2D>();
-        Rigidbody2D rb = element.GetComponent<Rigidbody2D>();   
+		Rigidbody2D rb = element.GetComponent<Rigidbody2D>();
 
-        if (elementCol != null && playerCol != null)            // 플레이어가 자기 자신을 잡았을 때 -> 충돌 무시
-            Physics2D.IgnoreCollision(elementCol, playerCol, true);
+		if (elementCol != null && playerCol != null)            // 플레이어가 자기 자신을 잡았을 때 -> 충돌 무시
+			Physics2D.IgnoreCollision(elementCol, playerCol, true);
 
-        if (rb != null)                                         // Rigidbody가 있으면 Kinematic으로
-            rb.bodyType = RigidbodyType2D.Kinematic;
+		if (rb != null)                                         // Rigidbody가 있으면 Kinematic으로
+			rb.bodyType = RigidbodyType2D.Kinematic;
 
 		element.SetParent(transform);   // 플레이어 자식으로
 		disableHook();                  // 훅 & 줄 숨기기
@@ -352,29 +352,29 @@ public class GrapplingHook : MonoBehaviour
 	}
 
 	public void ThrowElement(Transform element, Vector2 throwDir)   // 던지기
-    {
+	{
 		if (!hookingList.Contains(element)) return;
-        EnemyAttack enemyAttack = element.GetComponent<EnemyAttack>();
-        if (enemyAttack != null)
-        {
-            enemyAttack.isGrabbed = false;
-            enemyAttack.ResetAttackState();
-        }
+		EnemyAttack enemyAttack = element.GetComponent<EnemyAttack>();
+		if (enemyAttack != null)
+		{
+			enemyAttack.isGrabbed = false;
+			enemyAttack.ResetAttackState();
+		}
 
-        GameManager.Instance.audioManager.HookThrowEnemySound(1f);  // 적 던지는 효과음
+		GameManager.Instance.audioManager.HookThrowEnemySound(1f);  // 적 던지는 효과음
 		hookingList.Remove(element);
 		element.SetParent(null);    // 부모 해제
 
-        if (element.gameObject.CompareTag(tagName.enemy))           // 태그가 적일 때
+		if (element.gameObject.CompareTag(tagName.enemy))           // 태그가 적일 때
 			element.gameObject.tag = tagName.throwingEnemy;         // 던져지는 적 태그로 변경
 		else if (element.gameObject.CompareTag(tagName.obj))        // 태그가 오브젝트일 때
 			element.gameObject.tag = tagName.throwingObj;           // 던져지는 오브젝트 태그로 변경
 
 		Collider2D enemyCol = element.GetComponent<Collider2D>();
-		Collider2D playerCol = GetComponent<Collider2D>();		
+		Collider2D playerCol = GetComponent<Collider2D>();
 		Rigidbody2D rb = element.GetComponent<Rigidbody2D>();
 
-        if (rb != null)
+		if (rb != null)
 		{
 			rb.bodyType = RigidbodyType2D.Dynamic;
 			rb.linearVelocity = Vector2.zero;
@@ -389,32 +389,32 @@ public class GrapplingHook : MonoBehaviour
 	}
 
 	public void MovePos()   // 위치 이동하기(그래플링 훅으로 잡았을 경우만)
-    {
+	{
 		if (!isAttachElement) return;
 
 		SpriteRenderer playerSprite = GetComponent<SpriteRenderer>();   // 훅에 있는 플레이어 SpriteRenderer 가져오기
 
-        for (int i = 0; i < hookingList.Count; i++)
+		for (int i = 0; i < hookingList.Count; i++)
 		{
 			if (hookingList[i] == null) continue;
 
 			Vector3 offset = followOffset;
 			offset.x = playerSprite.flipX ? -Mathf.Abs(followOffset.x) : Mathf.Abs(followOffset.x); // followOffset을 기준으로 x를 왼쪽/오른쪽 방향 맞춤
-            hookingList[i].localPosition = offset; // 부모 transform 기준 localPosition
+			hookingList[i].localPosition = offset; // 부모 transform 기준 localPosition
 		}
 	}
 
 	public void disableHook()   // 훅 & 줄 숨기기
-    {
+	{
 		hook.gameObject.SetActive(false);
 		line.enabled = false;
 		isAttach = false;
 		isHookActive = false;
 		isLineMax = false;
 	}
-    	
+
 	public void resetHook()     // 훅 상태 초기화
-    {
+	{
 		isHookActive = false;
 		isLineMax = false;
 		hook.GetComponent<Hooking>().joint2D.enabled = false;
@@ -422,11 +422,11 @@ public class GrapplingHook : MonoBehaviour
 	}
 
 	IEnumerator SlowRoutine()   // 슬로우 효과 코루틴
-    {
+	{
 		sprite.color = Color.red;
 
 		if (colorAdjustments != null)
-            colorAdjustments.saturation.value = -50f;
+			colorAdjustments.saturation.value = -50f;
 
 		Time.timeScale = slowFactor;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
@@ -436,7 +436,7 @@ public class GrapplingHook : MonoBehaviour
 		{
 			if (GameManager.Instance.playerController.isGrounded || isAttach) break;
 
-            elapsed += Time.unscaledDeltaTime;
+			elapsed += Time.unscaledDeltaTime;
 			yield return null;
 		}
 
@@ -445,88 +445,88 @@ public class GrapplingHook : MonoBehaviour
 		sprite.color = Color.white;
 
 		if (colorAdjustments != null)
-            colorAdjustments.saturation.value = 0f;
+			colorAdjustments.saturation.value = 0f;
 	}
 
 	public void ApplyHookImpulse(Vector2 hookPos)   // 힘 주기
-    {
+	{
 		Vector2 dir = (hookPos - (Vector2)transform.position).normalized;
 		float horizontal = dir.x > 0 ? 1f : -1f;
 		float power = 3f; // 힘 세기
 		rigid.AddForce(new Vector2(horizontal * power, 1.2f), ForceMode2D.Impulse);
 	}
 
-    public float GetGaugePercent()
-    {
-        return accumulatedAngle / maxAngle; // 0~1
-    }
+	public float GetGaugePercent()
+	{
+		return accumulatedAngle / maxAngle; // 0~1
+	}
 
-    public void Boost(float gaugePercent)
-    {
-        if (currentBoost != null)
-            StopCoroutine(currentBoost);
+	public void Boost(float gaugePercent)
+	{
+		if (currentBoost != null)
+			StopCoroutine(currentBoost);
 
-        currentBoost = StartCoroutine(BoostRoutine(gaugePercent));
-    }
+		currentBoost = StartCoroutine(BoostRoutine(gaugePercent));
+	}
 
-    private IEnumerator BoostRoutine(float gaugePercent)
-    {
-        var stats = GameManager.Instance.playerStatsRuntime;
-        float originalSpeed = stats.speed;
-        float boostFactor = 1 + (boostMultiplier - 1) * gaugePercent;
-        stats.speed = originalSpeed * boostFactor;
-        float time = 0f;
+	private IEnumerator BoostRoutine(float gaugePercent)
+	{
+		var stats = GameManager.Instance.playerStatsRuntime;
+		float originalSpeed = stats.speed;
+		float boostFactor = 1 + (boostMultiplier - 1) * gaugePercent;
+		stats.speed = originalSpeed * boostFactor;
+		float time = 0f;
 
-        while (time < boostDuration)
-        {
-            if (GameManager.Instance.playerController.hasCollided) break;
+		while (time < boostDuration)
+		{
+			if (GameManager.Instance.playerController.hasCollided) break;
 
-            time += Time.deltaTime;
-            yield return null;
-        }
+			time += Time.deltaTime;
+			yield return null;
+		}
 
-        stats.speed = originalSpeed;
-        currentBoost = null;
-    }
+		stats.speed = originalSpeed;
+		currentBoost = null;
+	}
 
-    public void CursorPathMarking()
-    {
-        if (Mouse.current == null) return;
-        if (GameManager.Instance.dialogSystem && GameManager.Instance.dialogSystem.isAction) return;    // 상호작용 중일 경우 표시선 그리지 않음
+	public void CursorPathMarking()
+	{
+		if (Mouse.current == null) return;
+		if (GameManager.Instance.dialogSystem && GameManager.Instance.dialogSystem.isAction) return;    // 상호작용 중일 경우 표시선 그리지 않음
 
-        Vector3 mouseScreen = Mouse.current.position.ReadValue();                       // 스크린 좌표 구하기
-        mouseScreen.z = Mathf.Abs(mainCam.transform.position.z);                        // z값 보정
-        Vector2 worldPos = mainCam.ScreenToWorldPoint(mouseScreen);                     // 월드 좌표
-        Vector2 dir = (worldPos - (Vector2)transform.position).normalized;              // 광선 방향
-        LayerMask mask = ~LayerMask.GetMask(tagName.player);                            // 레이케스트 플레이어 충돌 무시
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);  // 자기 위치에서 dir 방향으로 광선 발사
-        
-        if (isAttach)       // 훅 사용 중이거나 몬스터를 잡고 있을 경우 선 비활성화
-        {
-            visualizerLine.Stop();
-            return;
-        }
+		Vector3 mouseScreen = Mouse.current.position.ReadValue();                       // 스크린 좌표 구하기
+		mouseScreen.z = Mathf.Abs(mainCam.transform.position.z);                        // z값 보정
+		Vector2 worldPos = mainCam.ScreenToWorldPoint(mouseScreen);                     // 월드 좌표
+		Vector2 dir = (worldPos - (Vector2)transform.position).normalized;              // 광선 방향
+		LayerMask mask = ~LayerMask.GetMask(tagName.player);                            // 레이케스트 플레이어 충돌 무시
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);  // 자기 위치에서 dir 방향으로 광선 발사
 
-        if (hit)        // 광선에 부딪히는 오브젝트가 있으면 선 활성화
-        {      
-            if (hit.collider.CompareTag(tagName.npc))   // 부딪힌 요소가 NPC일 경우 선 비활성화
-            {
-                visualizerLine.Stop();
-                return;
-            }
+		if (isAttach)   // 훅 사용 중일 경우 선 비활성화
+		{
+			visualizerLine.Stop();
+			return;
+		}
 
-            // 부딪힌 요소에 따라 선 색상 변경
-            // 뭔가를 들고 있을 때 오브젝트나 몬스터가 부딪혔을 경우
-            if (/*(enemy.isAttach || obj.isAttach) &&*/ (hit.collider.CompareTag(tagName.enemy) || hit.collider.CompareTag(tagName.obj)))
-                visualizerLine.SetLineColor(new Color(1f, 0.2f, 0.2f));
-            else if (hit.collider.CompareTag(tagName.obj))
-                visualizerLine.SetLineColor(new Color(0.49f, 0.85f, 0.45f));
-            else
-                visualizerLine.SetLineColor(new Color(0.18f, 0.76f, 1f));
+		if (hit)        // 광선에 부딪히는 오브젝트가 있으면 선 활성화
+		{
+			if (hit.collider.CompareTag(tagName.npc))   // 부딪힌 요소가 NPC일 경우 선 비활성화
+			{
+				visualizerLine.Stop();
+				return;
+			}
 
-            visualizerLine.Play(transform.position, hit.point);
-        }
-        else
-            visualizerLine.Stop();
-    }
+			// 부딪힌 요소에 따라 선 색상 변경
+			// 뭔가를 들고 있을 때 오브젝트나 몬스터가 부딪혔을 경우
+			if (isAttachElement && (hit.collider.CompareTag(tagName.enemy) || hit.collider.CompareTag(tagName.obj)))
+				visualizerLine.SetLineColor(new Color(1f, 0.2f, 0.2f));
+			else if (hit.collider.CompareTag(tagName.obj))
+				visualizerLine.SetLineColor(new Color(0.49f, 0.85f, 0.45f));
+			else
+				visualizerLine.SetLineColor(new Color(0.18f, 0.76f, 1f));
+
+			visualizerLine.Play(transform.position, hit.point);
+		}
+		else
+			visualizerLine.Stop();
+	}
 }
