@@ -10,7 +10,7 @@ public class TestHooking : MonoBehaviour
 {
 	/* 훅 */
     [HideInInspector] public Vector2 destiny;
-    [HideInInspector] public float speed;      // 훅 발사 속도
+	[HideInInspector] public float speed;		// 훅 발사 속도
 
 	/* 훅 물리 */
 	[Header("훅 물리")]
@@ -25,14 +25,14 @@ public class TestHooking : MonoBehaviour
 	float currentLength; // 현재 길이
 	float targetLength;  // 목표 길이
 
-	[HideInInspector] public GameObject player;		// 플레이어 오브젝트
-    [HideInInspector] public LineRenderer line;
+	private GameObject player;		// 플레이어 오브젝트
+    private LineRenderer line;		// 훅 줄
     [HideInInspector] public int segmentCnt;		// 점 갯수
     [HideInInspector] public float lineLen;			// 줄 길이
 
 	private List<HookSegment> hookSegments = new List<HookSegment>();
-	private bool isAttachGround;                    // 훅이 붙었는지 여부
-	private bool isPlayedDraftSound = false;		// 사운드 재생 여부
+	private bool isPlayedDraftSound = false;        // 사운드 재생 여부
+	private bool isLineMax = false;                 // 훅 길이 최대 여부
 
 	private void Awake()
     {
@@ -56,7 +56,11 @@ public class TestHooking : MonoBehaviour
 		// 세그먼트 생성
 		for (int i = 0; i < segmentCnt; i++)
 			hookSegments.Add(new HookSegment(ropeStartPoint));
-    }
+
+		// 훅 방향 회전
+		Vector2 dir = (Vector2)transform.position - destiny;
+		transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90);	// +90 : 각도 보정
+	}
 
     private void FixedUpdate()
 	{
@@ -96,9 +100,7 @@ public class TestHooking : MonoBehaviour
     {
         Vector3[] ropePos = new Vector3[segmentCnt];
         for (int i = 0; i < hookSegments.Count; i++)
-        {
             ropePos[i] = hookSegments[i].CurrPos;
-        }
 
         line.SetPositions(ropePos);
     }
@@ -116,7 +118,7 @@ public class TestHooking : MonoBehaviour
 		}
 	}
 
-    // 세그먼트 위치 조정 (Verlet 적산법 사용)
+    // 세그먼트 위치 조정
     private void ApplyContraints()
     {
 		// 첫 번째 세그먼트 (플레이어 위치)
@@ -159,16 +161,24 @@ public class TestHooking : MonoBehaviour
 	// 훅 이동 액션
 	public void HookMoveAction()
 	{
-		if(!isAttachGround)
-		{
-			// 훅 오브젝트 이동 및 방향 전환
-			transform.position = Vector3.MoveTowards(transform.position, destiny, speed);
-			Vector2 dir = destiny - (Vector2)transform.position;
-			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+		// 이동
+		transform.position = Vector2.MoveTowards(transform.position, destiny, speed);
 
-			// TODO: 줄 이동
+		// 줄 이동
+		// 마지막 세그먼트를 훅 위치로 고정
+		//HookSegment last = hookSegments[hookSegments.Count - 1];
+		//last.CurrPos = transform.position;
+		//hookSegments[hookSegments.Count - 1] = last;
 
-		}
+		//// 나머지 세그먼트 부드럽게 따라오게
+		//for (int i = hookSegments.Count - 2; i >= 0; i--)
+		//{
+		//	HookSegment seg = hookSegments[i];
+		//	Vector2 nextPos = hookSegments[i + 1].CurrPos;
+
+		//	seg.CurrPos = Vector2.Lerp(seg.CurrPos, nextPos, 0.35f);
+		//	hookSegments[i] = seg;
+		//}
 	}
 
 	// 줄 길이 변경

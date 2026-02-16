@@ -197,27 +197,27 @@
 //	//	Boost(accumulatedAngle / maxAngle);
 //	//}
 
-//	void HandleRopeDraft() // 줄 당기기 처리
-//	{
-//		if (Keyboard.current.spaceKey.isPressed)    // 스페이스 줄 당기기
-//		{
-//			if (hookJoint != null && hookJoint.enabled)
-//			{
-//				hookJoint.distance = Mathf.Max(0.5f, hookJoint.distance - 0.1f);
+//	//void HandleRopeDraft() // 줄 당기기 처리
+//	//{
+//	//	if (Keyboard.current.spaceKey.isPressed)    // 스페이스 줄 당기기
+//	//	{
+//	//		if (hookJoint != null && hookJoint.enabled)
+//	//		{
+//	//			hookJoint.distance = Mathf.Max(0.5f, hookJoint.distance - 0.1f);
 
-//				if (!isPlayedDraftSound)
-//				{
-//					GameManager.Instance.audioManager.HookDraftSound(1f);
-//					isPlayedDraftSound = true;
-//				}
-//			}
-//		}
-//		if (Keyboard.current.spaceKey.wasReleasedThisFrame)
-//		{
-//			GameManager.Instance.audioManager.StopSFX();
-//			isPlayedDraftSound = false;
-//		}
-//	}
+//	//			if (!isPlayedDraftSound)
+//	//			{
+//	//				GameManager.Instance.audioManager.HookDraftSound(1f);
+//	//				isPlayedDraftSound = true;
+//	//			}
+//	//		}
+//	//	}
+//	//	if (Keyboard.current.spaceKey.wasReleasedThisFrame)
+//	//	{
+//	//		GameManager.Instance.audioManager.StopSFX();
+//	//		isPlayedDraftSound = false;
+//	//	}
+//	//}
 
 //	//void HandleSwingGauge() // 회전 게이지 처리 분리
 //	//{
