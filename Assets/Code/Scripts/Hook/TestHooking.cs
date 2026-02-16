@@ -13,14 +13,15 @@ public class TestHooking : MonoBehaviour
     [HideInInspector] public float speed;      // 훅 발사 속도
 
 	/* 훅 물리 */
+	[Header("훅 물리")]
 	public int constraintRuns = 500;                // 실행 횟수
 	public Vector2 gravityForce = new Vector2(0f, -80f);	// 로프 중력값
 	public float dampingFactor = 0.9f;            // 제동 계수 (과도한 흔들림 제어용)
 
 	/* 길이 제어 */
+	[Header("훅 길이 제어")]
 	public float lengthChangeSpeed = 8f;     // 길이 변화 부드러움
 	public float reelSpeed = 15f;            // 감기 속도
-	public float minLength = 2f;
 	float currentLength; // 현재 길이
 	float targetLength;  // 목표 길이
 
@@ -40,7 +41,9 @@ public class TestHooking : MonoBehaviour
 
     private void Start()
     {
-		segmentCnt = Mathf.Max(2, (int)(lineLen / hookVal.segmentLen)); // 세그먼트 개수 계산
+		lineLen = Mathf.Max(hookVal.minSegmentCnt, lineLen);
+		segmentCnt = Mathf.Max((int)(hookVal.minSegmentCnt * hookVal.segmentLen), (int)(lineLen * hookVal.segmentLen)); // 세그먼트 개수 계산
+		Debug.Log("Len: " + lineLen + " * " + hookVal.segmentLen + " = " + (lineLen * hookVal.segmentLen));
 		line.positionCount = segmentCnt;
 		speed = GameManager.Instance.playerStatsRuntime.hookSpeed;
 
@@ -159,8 +162,10 @@ public class TestHooking : MonoBehaviour
 	{
 		if(!isAttachGround)
 		{
-			// 훅 오브젝트 이동
-			transform.position = Vector2.MoveTowards(transform.position, destiny, speed);
+			// 훅 오브젝트 이동 및 방향 전환
+			transform.position = Vector3.MoveTowards(transform.position, destiny, speed);
+			Vector2 dir = destiny - (Vector2)transform.position;
+			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
 
 			// TODO: 줄 이동
 
@@ -187,19 +192,20 @@ public class TestHooking : MonoBehaviour
 			isPlayedDraftSound = false;
 		}
 
-		targetLength = Mathf.Clamp(targetLength, minLength, lineLen);
+		targetLength = Mathf.Clamp(targetLength, hookVal.minSegmentCnt, lineLen);
 	}
 
-	// 
+	// 줄 길어지게
 	private void IncreaseRopeLength()
 	{
-		if(targetLength < hookVal.maxHookLen)
+		if(targetLength < hookVal.maxSegmentCnt)
 			targetLength += reelSpeed * Time.fixedDeltaTime;
 	}
 
+	// 줄 짧아지게
 	private void DecreaseRopeLength()
 	{
-		if (targetLength > hookVal.minHookLen)
+		if (targetLength > hookVal.minSegmentCnt)
 			targetLength -= reelSpeed * Time.fixedDeltaTime;
 	}
 
