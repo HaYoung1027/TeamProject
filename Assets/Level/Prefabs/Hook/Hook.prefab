@@ -107,12 +107,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TestHooking
   destiny: {x: 0, y: 0}
   speed: 1
-  constraintRuns: 500
-  gravityForce: {x: 0, y: -80}
-  dampingFactor: 0.9
+  constraintRuns: 100
+  gravityForce: {x: 0, y: -50}
+  dampingFactor: 0.95
   lengthChangeSpeed: 8
-  reelSpeed: 20
-  minLength: 3
+  reelSpeed: 15
   player: {fileID: 0}
   line: {fileID: 0}
   segmentCnt: 0

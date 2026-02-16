@@ -23,8 +23,7 @@ public class TestGrapplingHook : MonoBehaviour
 	[HideInInspector] public bool isAttach;			// 훅 사용 여부
 	[HideInInspector] public bool isGrab;			// 훅 잡음 여부
 	[HideInInspector] public GameObject curHook;	// 현재 훅
-	private float distance;		// 훅 길이
-	private bool isLineMax;		// 훅 길이 최대 여부
+	private float distance;							// 훅 길이
 	private List<Transform> hookingList = new List<Transform>();    // 그래플링 훅으로 잡은 요소 리스트
 
 	/* 플레이어 */
@@ -142,7 +141,6 @@ public class TestGrapplingHook : MonoBehaviour
 				}
 
 				isAttach = false;
-				isLineMax = false;
 				hasPlayedAttachSound = false;
 
 				Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
@@ -233,7 +231,6 @@ public class TestGrapplingHook : MonoBehaviour
 
 		element.SetParent(transform);   // 플레이어 자식으로
 
-		isLineMax = false;
 		isGrab = true;
 	}
 
