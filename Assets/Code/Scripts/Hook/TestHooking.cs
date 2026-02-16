@@ -43,7 +43,6 @@ public class TestHooking : MonoBehaviour
     {
 		lineLen = Mathf.Max(hookVal.minSegmentCnt, lineLen);
 		segmentCnt = Mathf.Max((int)(hookVal.minSegmentCnt * hookVal.segmentLen), (int)(lineLen * hookVal.segmentLen)); // 세그먼트 개수 계산
-		Debug.Log("Len: " + lineLen + " * " + hookVal.segmentLen + " = " + (lineLen * hookVal.segmentLen));
 		line.positionCount = segmentCnt;
 		speed = GameManager.Instance.playerStatsRuntime.hookSpeed;
 
