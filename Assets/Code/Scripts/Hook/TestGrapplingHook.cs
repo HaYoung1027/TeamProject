@@ -92,8 +92,6 @@ public class TestGrapplingHook : MonoBehaviour
 			LayerMask mask = ~LayerMask.GetMask(tagName.player);                                // 레이케스트 땅만 맞출 수 있도록 마스크 생성
 			RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);      // 자기 위치에서 dir 방향으로 광선 발사
 
-			hook.GetComponent<TestHooking>().HookMoveAction();      // 훅 움직이는 액션
-
 			if (hit)
 			{
 				// 효과음 재생
@@ -119,7 +117,7 @@ public class TestGrapplingHook : MonoBehaviour
 
 					hooking = curHook.GetComponent<TestHooking>();
 					hooking.destiny = destiny;
-					curHook.SetActive(true);
+					hooking.isHit = true;
 
 					// 점 사이 거리를 고려하여 거리만큼의 점 갯수 구하기
 					float len = Vector2.Distance(transform.position, destiny);
@@ -135,10 +133,7 @@ public class TestGrapplingHook : MonoBehaviour
 			if (isAttach)
 			{
 				if (curHook != null)
-				{
-					curHook.SetActive(false);
 					Destroy(curHook);
-				}
 
 				isAttach = false;
 				hasPlayedAttachSound = false;

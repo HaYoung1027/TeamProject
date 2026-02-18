@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		if (grappling.isAttach && !isGrounded)
 		{
+			// 스윙 가속도 주기
 			Vector2 hookPoint = grappling.curHook.transform.position;
 			Vector2 centerToPlayer = (Vector2)transform.position - hookPoint;
 

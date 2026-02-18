@@ -41,8 +41,8 @@ public class Globals
     // 갈고리 관련 수치값(int, float) 클래스
     public static class HookValue
     {
-        public static readonly float segmentLen = 3.5f;
-		public static readonly int minSegmentCnt = 4;
-		public static readonly int maxSegmentCnt = 30;
+        public static readonly float segmentLen = 0.225f;
+		public static readonly int minSegmentLen = 5;
+		public static readonly int maxSegmentLen = 30;
     }
 }
