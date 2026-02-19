@@ -13,7 +13,6 @@ public class EnemyController : MonoBehaviour
     Rigidbody2D rigid;
     IDamageable damageable;
     public bool isGrounded;
-    public bool hasCollided = false;
 
     void Awake()
 	{
@@ -38,7 +37,6 @@ public class EnemyController : MonoBehaviour
                 break;
             }
         }
-        hasCollided = true;     // 충돌 체크
 
         if (isGrounded && rigid.linearVelocityY < 0f)       // y값 보정 (바닥 뚫림 방지)
             rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);

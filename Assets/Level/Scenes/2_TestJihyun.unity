@@ -180,7 +180,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &26578192
 BoxCollider2D:
@@ -300,7 +300,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &26578195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,7 +376,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &28387898
 BoxCollider2D:
@@ -497,7 +496,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &28387901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,7 +509,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &28387902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -689,7 +686,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &66138984
 BoxCollider2D:
@@ -809,7 +806,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &66138987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1109,6 +1105,7 @@ GameObject:
   - component: {fileID: 199378710}
   - component: {fileID: 199378712}
   - component: {fileID: 199378713}
+  - component: {fileID: 199378714}
   m_Layer: 3
   m_Name: TestMap
   m_TagString: Ground
@@ -222717,7 +222714,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
@@ -222750,6 +222747,341 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!66 &199378714
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199378708}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 199378712}
+    m_ColliderPaths:
+    - - X: -1180000000
+        Y: 910000000
+      - X: -3500000000
+        Y: 910000000
+      - X: -3500000000
+        Y: -590000000
+      - X: -1180000000
+        Y: -590000000
+    - - X: -2300000000
+        Y: -240000000
+      - X: -2300000000
+        Y: -230000000
+      - X: -2310000128
+        Y: -230000000
+      - X: -2310000128
+        Y: -220000000
+      - X: -2320000000
+        Y: -220000000
+      - X: -2320000000
+        Y: -210000000
+      - X: -2620000000
+        Y: -210000000
+      - X: -2620000000
+        Y: -220000000
+      - X: -2750000128
+        Y: -220000000
+      - X: -2750000128
+        Y: -210000000
+      - X: -3100000000
+        Y: -210000000
+      - X: -3100000000
+        Y: 510000000
+      - X: -3009999872
+        Y: 510000000
+      - X: -3009999872
+        Y: 550000000
+      - X: -3100000000
+        Y: 550000000
+      - X: -3100000000
+        Y: 650000000
+      - X: -1550000000
+        Y: 650000000
+      - X: -1550000000
+        Y: 110000000
+      - X: -1710000000
+        Y: 110000000
+      - X: -1710000000
+        Y: 40000000
+      - X: -1550000000
+        Y: 40000000
+      - X: -1550000000
+        Y: -200000000
+      - X: -1760000000
+        Y: -200000000
+      - X: -1760000000
+        Y: -240000000
+    - - X: -2240000000
+        Y: 520000000
+      - X: -2289999872
+        Y: 520000000
+      - X: -2289999872
+        Y: 490000000
+      - X: -2240000000
+        Y: 490000000
+    - - X: -2510000128
+        Y: 520000000
+      - X: -2780000000
+        Y: 520000000
+      - X: -2780000000
+        Y: 480000000
+      - X: -2510000128
+        Y: 480000000
+    - - X: -1830000000
+        Y: 430000000
+      - X: -1880000000
+        Y: 430000000
+      - X: -1880000000
+        Y: 380000000
+      - X: -1830000000
+        Y: 380000000
+    - - X: -2360000000
+        Y: 320000000
+      - X: -2390000128
+        Y: 320000000
+      - X: -2390000128
+        Y: 290000000
+      - X: -2360000000
+        Y: 290000000
+    - - X: -2870000128
+        Y: 320000000
+      - X: -2929999872
+        Y: 320000000
+      - X: -2929999872
+        Y: 260000000
+      - X: -2870000128
+        Y: 260000000
+    - - X: -2540000000
+        Y: 320000000
+      - X: -2689999872
+        Y: 320000000
+      - X: -2689999872
+        Y: 290000000
+      - X: -2540000000
+        Y: 290000000
+    - - X: -2110000000
+        Y: 310000000
+      - X: -2140000000
+        Y: 310000000
+      - X: -2140000000
+        Y: 280000000
+      - X: -2110000000
+        Y: 280000000
+    - - X: -1680000000
+        Y: 290000000
+      - X: -1790000000
+        Y: 290000000
+      - X: -1790000000
+        Y: 270000000
+      - X: -1680000000
+        Y: 270000000
+    - - X: -2220000000
+        Y: 190000000
+      - X: -2520000000
+        Y: 190000000
+      - X: -2520000000
+        Y: 140000000
+      - X: -2220000000
+        Y: 140000000
+    - - X: -1890000000
+        Y: 180000000
+      - X: -1920000000
+        Y: 180000000
+      - X: -1920000000
+        Y: 150000000
+      - X: -1890000000
+        Y: 150000000
+    - - X: -2809999872
+        Y: 120000000
+      - X: -2840000000
+        Y: 120000000
+      - X: -2840000000
+        Y: 90000000
+      - X: -2809999872
+        Y: 90000000
+    - - X: -1930000000
+        Y: 40000000
+      - X: -2150000128
+        Y: 40000000
+      - X: -2150000128
+        Y: -10000000
+      - X: -1930000000
+        Y: -10000000
+    - - X: -2609999872
+        Y: 10000000
+      - X: -2750000128
+        Y: 10000000
+      - X: -2750000128
+        Y: -40000000
+      - X: -2609999872
+        Y: -40000000
+    - - X: -2420000000
+        Y: -70000000
+      - X: -2489999872
+        Y: -70000000
+      - X: -2489999872
+        Y: -100000000
+      - X: -2420000000
+        Y: -100000000
+    - - X: -2240000000
+        Y: -80000000
+      - X: -2270000128
+        Y: -80000000
+      - X: -2270000128
+        Y: -110000000
+      - X: -2240000000
+        Y: -110000000
+    - - X: -2880000000
+        Y: -80000000
+      - X: -2940000000
+        Y: -80000000
+      - X: -2940000000
+        Y: -110000000
+      - X: -2880000000
+        Y: -110000000
+    - - X: -1890000000
+        Y: -120000000
+      - X: -1950000000
+        Y: -120000000
+      - X: -1950000000
+        Y: -140000000
+      - X: -1890000000
+        Y: -140000000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: -118.00003, y: -59}
+      - {x: -118.00003, y: 91}
+      - {x: -350, y: 90.99997}
+      - {x: -349.99997, y: -59}
+    - - {x: -176, y: -23.999971}
+      - {x: -230, y: -23.999971}
+      - {x: -230.00003, y: -23}
+      - {x: -231.00002, y: -22.999971}
+      - {x: -231.00005, y: -22}
+      - {x: -232, y: -21.999971}
+      - {x: -232.00003, y: -21}
+      - {x: -262, y: -21.000029}
+      - {x: -262.00003, y: -22}
+      - {x: -275.00003, y: -21.999971}
+      - {x: -275.00003, y: -21}
+      - {x: -310, y: -20.999971}
+      - {x: -309.99997, y: 51}
+      - {x: -301, y: 51.00003}
+      - {x: -301.00003, y: 55}
+      - {x: -310, y: 55.000034}
+      - {x: -309.99997, y: 65}
+      - {x: -155, y: 64.99997}
+      - {x: -155.00003, y: 11}
+      - {x: -171, y: 10.99997}
+      - {x: -170.99997, y: 4}
+      - {x: -155, y: 3.9999704}
+      - {x: -155.00003, y: -20}
+      - {x: -176, y: -20.000029}
+    - - {x: -251.00005, y: 48}
+      - {x: -251.00005, y: 52}
+      - {x: -278, y: 51.999973}
+      - {x: -277.99997, y: 48}
+    - - {x: -224.00003, y: 49}
+      - {x: -224.00003, y: 52}
+      - {x: -228.99998, y: 51.999973}
+      - {x: -228.99997, y: 49}
+    - - {x: -183.00003, y: 38}
+      - {x: -183.00003, y: 43}
+      - {x: -188, y: 42.999973}
+      - {x: -187.99997, y: 38}
+    - - {x: -287.00003, y: 26}
+      - {x: -287.00003, y: 32}
+      - {x: -293, y: 31.999971}
+      - {x: -292.99997, y: 26}
+    - - {x: -254.00003, y: 29}
+      - {x: -254.00003, y: 32}
+      - {x: -269, y: 31.999971}
+      - {x: -268.99997, y: 29}
+    - - {x: -236.00003, y: 29}
+      - {x: -236.00003, y: 32}
+      - {x: -239.00002, y: 31.999971}
+      - {x: -238.99998, y: 29}
+    - - {x: -211.00003, y: 28}
+      - {x: -211.00003, y: 31}
+      - {x: -214, y: 30.999971}
+      - {x: -213.99997, y: 28}
+    - - {x: -168.00003, y: 27}
+      - {x: -168.00003, y: 29}
+      - {x: -179, y: 28.999971}
+      - {x: -178.99997, y: 27}
+    - - {x: -222.00003, y: 14}
+      - {x: -222.00003, y: 19}
+      - {x: -252, y: 18.999971}
+      - {x: -251.99998, y: 14}
+    - - {x: -189.00003, y: 15}
+      - {x: -189.00003, y: 18}
+      - {x: -192, y: 17.999971}
+      - {x: -191.99997, y: 15}
+    - - {x: -281.00003, y: 9}
+      - {x: -281.00003, y: 12}
+      - {x: -284, y: 11.99997}
+      - {x: -283.99997, y: 9}
+    - - {x: -193.00003, y: -1}
+      - {x: -193.00003, y: 4}
+      - {x: -215.00002, y: 3.999971}
+      - {x: -214.99998, y: -1}
+    - - {x: -261.00003, y: -4}
+      - {x: -261.00003, y: 1}
+      - {x: -275.00003, y: 0.99997073}
+      - {x: -275, y: -4}
+    - - {x: -242.00003, y: -10}
+      - {x: -242.00003, y: -7}
+      - {x: -248.99998, y: -7.0000296}
+      - {x: -248.99997, y: -10}
+    - - {x: -224.00003, y: -11}
+      - {x: -224.00003, y: -8}
+      - {x: -227.00002, y: -8.00003}
+      - {x: -226.99998, y: -11}
+    - - {x: -288.00003, y: -11}
+      - {x: -288.00003, y: -8}
+      - {x: -294, y: -8.00003}
+      - {x: -293.99997, y: -11}
+    - - {x: -189.00003, y: -14}
+      - {x: -189.00003, y: -12}
+      - {x: -195, y: -12.00003}
+      - {x: -194.99997, y: -14}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 199378708}
 --- !u!1 &290433090
 GameObject:
   m_ObjectHideFlags: 0
@@ -222881,7 +223213,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &325858061
 BoxCollider2D:
@@ -223016,7 +223348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &325858065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223426,7 +223757,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &428413506
 BoxCollider2D:
@@ -223561,7 +223892,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &428413510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224434,7 +224764,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &712223955
 BoxCollider2D:
@@ -224569,7 +224899,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &712223959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224583,7 +224912,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &712223960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224675,7 +225003,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &733997521
 BoxCollider2D:
@@ -224817,7 +225145,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &733997525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225273,7 +225600,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!50 &847236896
 Rigidbody2D:
   serializedVersion: 5
@@ -225299,7 +225625,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &847236897
 BoxCollider2D:
@@ -226048,7 +226374,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1021965187
 BoxCollider2D:
@@ -226168,7 +226494,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &1021965190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226502,7 +226827,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!50 &1135132583
 Rigidbody2D:
   serializedVersion: 5
@@ -226528,7 +226852,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1135132584
 BoxCollider2D:
@@ -226696,7 +227020,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1145583784
 BoxCollider2D:
@@ -226816,7 +227140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &1145583787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227400,6 +227723,10 @@ PrefabInstance:
       propertyPath: m_GravityScale
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6255624013362345816, guid: aacc80020f45af9459318ec226fa961d, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6385493965545502598, guid: aacc80020f45af9459318ec226fa961d, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -227494,7 +227821,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!50 &1286520797
 Rigidbody2D:
   serializedVersion: 5
@@ -227520,7 +227846,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1286520798
 BoxCollider2D:
@@ -227717,7 +228043,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1298111047
 BoxCollider2D:
@@ -227837,7 +228163,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &1298111050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228997,7 +229322,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!50 &1989031942
 Rigidbody2D:
   serializedVersion: 5
@@ -229023,7 +229347,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1989031943
 BoxCollider2D:
@@ -229383,7 +229707,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!50 &2059501692
 Rigidbody2D:
   serializedVersion: 5
@@ -229409,7 +229732,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &2059501693
 BoxCollider2D:
@@ -229750,7 +230073,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!50 &2106128654
 Rigidbody2D:
   serializedVersion: 5
@@ -229776,7 +230098,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &2106128655
 BoxCollider2D:
