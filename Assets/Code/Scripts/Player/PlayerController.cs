@@ -62,9 +62,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 	SpriteRenderer sprite;
 	PlayerInteraction interaction;  // 상호작용
 	Animator animator;              // 애니메이션
-	private bool isPlayedRunSound = false;	// 효과음 재생 여부
-
-	private Coroutine playerDieCoroutine;
+	private bool isPlayedRunSound = false;  // 효과음 재생 여부
+	private bool isJump = false;
+    private bool wasGrounded;		// 이전 프레임 바닥 상태 저장
+    private bool justLanded;
+    private Coroutine playerDieCoroutine;
 	private Coroutine damageCanvasCoroutine;
 	private Coroutine damagedColorCoroutine;
 
@@ -87,6 +89,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (interaction && interaction.GetIsAction()) return;
         HandleMove();   // 플레이어 이동
         HandleFlip();   // 방향 플립
+
+        // 착지 감지
+        justLanded = !wasGrounded && isGrounded;
+        wasGrounded = isGrounded;
     }
 
 	void Update()
@@ -117,6 +123,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		GameManager.Instance.audioManager.PlayJumpSound(1f);
 		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
 		isGrounded = false;
+		isJump = true;
 	}
 
 	public void HandleMove()
@@ -155,7 +162,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (!isRunning)
 		{
 			walkSoundTimer = 0f; // 멈추면 타이머 리셋
-			GameManager.Instance.audioManager.StopSFX();    // 효과음 재생 중지
+			GameManager.Instance.audioManager.StopRunSound();    // 효과음 재생 중지
 			isPlayedRunSound = false;
 			return;
 		}
@@ -167,7 +174,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			// 효과음 재생
 			if(!isPlayedRunSound)
 			{
-				GameManager.Instance.audioManager.PlayRunSound(1f);
+				GameManager.Instance.audioManager.PlayRunSound(0.5f);
 				isPlayedRunSound = true;
 			}
 			walkSoundTimer = 0f;
@@ -238,6 +245,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void CheckGround(Collision2D collision)      // 바닥 체크
 	{
 		isGrounded = Physics2D.OverlapCircle(pos.position, checkRadious, isLayer);
+		isJump = false;
 	}
 
 	void SetPlayerState(playerState state)      // 플레이어 상태 변경
@@ -247,13 +255,25 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void UpdateAnimation()      // 애니메이션 업데이트
 	{
-		if (isGrounded)
-		{
-			bool hasMoveInput = Mathf.Abs(inputVec.x) > 0.01f;      // 플레이어가 가만히 있을 때
+        if (!isGrounded)
+        {
+            SetPlayerState(playerState.Jump);
+            isRunning = false;
+            return;
+        }
 
-			if (!hasMoveInput)
+        if (justLanded && isGrounded)
+        {
+            SetPlayerState(playerState.Land);
+            return;
+        }
+
+        if (isGrounded)
+		{
+            bool hasMoveInput = Mathf.Abs(inputVec.x) > 0.01f;      // 플레이어가 가만히 있을 때
+            if (!hasMoveInput)
 			{
-				curTime += Time.deltaTime;
+                curTime += Time.deltaTime;
 
 				if (curTime >= maxTime)
 					SetPlayerState(playerState.Idle);
@@ -261,14 +281,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 			}
 			else
 			{
-				SetPlayerState(playerState.Run);
+                SetPlayerState(playerState.Run);
 				curTime = 0f;
 				isRunning = true;
 			}
 		}
 		else
-		{
-			SetPlayerState(playerState.Idle);
+		{	
 			isRunning = false;
 		}
 	}
