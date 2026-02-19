@@ -58,14 +58,16 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private TestGrapplingHook grappling;
 	public Vector2 inputVec;
-	Rigidbody2D rigid;
-	SpriteRenderer sprite;
-	PlayerInteraction interaction;  // 상호작용
-	Animator animator;              // 애니메이션
+	private Rigidbody2D rigid;
+	private SpriteRenderer sprite;
+	private PlayerInteraction interaction;  // 상호작용
+	private Animator animator;              // 애니메이션
 	private bool isPlayedRunSound = false;  // 효과음 재생 여부
 	private bool isJump = false;
     private bool wasGrounded;		// 이전 프레임 바닥 상태 저장
     private bool justLanded;
+	private Silhouette solihoutte;	// 잔상효과
+
     private Coroutine playerDieCoroutine;
 	private Coroutine damageCanvasCoroutine;
 	private Coroutine damagedColorCoroutine;
@@ -77,6 +79,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		animator = GetComponent<Animator>();
 		interaction = GameManager.Instance.playerInteraction;
 		grappling = GetComponent<TestGrapplingHook>();
+		solihoutte = GetComponent<Silhouette>();
 	}
 
 	void Start()
@@ -135,6 +138,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		if (grappling.isAttach && !isGrounded)
 		{
+			// 스윙 가속도 주기
 			Vector2 hookPoint = grappling.curHook.transform.position;
 			Vector2 centerToPlayer = (Vector2)transform.position - hookPoint;
 
@@ -254,7 +258,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void UpdateAnimation()      // 애니메이션 업데이트
 	{
-        if (!isGrounded)
+        if (!isGrounded && isJump)
         {
             SetPlayerState(playerState.Jump);
             isRunning = false;
@@ -310,8 +314,16 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
 		{
-			if (!isSlow && slowGauge > 0f) StartSlow();
-			else StopSlow();
+			if (!isSlow && slowGauge > 0f)
+			{
+				StartSlow();
+				solihoutte.Active = true;
+			}
+			else
+			{
+				StopSlow();
+				solihoutte.Active = false;
+			}
 		}
 	}
 

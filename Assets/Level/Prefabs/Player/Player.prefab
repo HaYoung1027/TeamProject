@@ -671,7 +671,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &4756874103759277193
 MonoBehaviour:
@@ -691,9 +691,23 @@ MonoBehaviour:
   blackCanvas: {fileID: 0}
   maxTime: 0.3
   isGrounded: 0
+  pos: {fileID: 0}
+  isLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  checkRadious: 0.1
   hasCollided: 0
   walkSoundInterval: 0.7
-  isWalking: 0
+  isRunning: 0
+  slowGaugeSlider: {fileID: 0}
+  slowFactor: 0.3
+  slowMaxGauge: 3
+  slowGauge: 3
+  slowDecreaseRate: 1
+  slowRecoverRate: 0.5
+  isSlow: 0
+  enemySprites: []
+  backgroundSprites: []
   inputVec: {x: 0, y: 0}
 --- !u!114 &4829653216477449006
 MonoBehaviour:
@@ -724,6 +738,11 @@ MonoBehaviour:
   followOffset: {x: 1, y: 0, z: 0}
   isAttach: 0
   isGrab: 0
+  curHook: {fileID: 0}
+  boostMultiplier: 1.5
+  boostDuration: 0.5
+  slowFactor: 0
+  slowLength: 0
 --- !u!70 &6149842786633117584
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

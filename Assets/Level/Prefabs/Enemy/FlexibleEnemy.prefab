@@ -121,7 +121,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &4051769843489103632
 MonoBehaviour:
@@ -136,7 +136,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   isGrounded: 0
-  hasCollided: 0
 --- !u!114 &3324927558684792273
 MonoBehaviour:
   m_ObjectHideFlags: 0

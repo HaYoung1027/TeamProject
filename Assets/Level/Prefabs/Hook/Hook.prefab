@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2782950733400507741
 Transform:
   m_ObjectHideFlags: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 313841730352807346}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -83.477295, y: 81.1993, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -107,13 +107,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TestHooking
   destiny: {x: 0, y: 0}
   speed: 1
-  constraintRuns: 100
+  isHit: 0
+  constraintRuns: 500
   gravityForce: {x: 0, y: -50}
-  dampingFactor: 0.95
+  dampingFactor: 0.9
   lengthChangeSpeed: 8
   reelSpeed: 15
-  player: {fileID: 0}
-  line: {fileID: 0}
   segmentCnt: 0
   lineLen: 0
 --- !u!120 &-7666463445354028900

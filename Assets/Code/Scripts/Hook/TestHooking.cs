@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Globals;
 
-using hookVal = Globals.HookValue;
-
 public class TestHooking : MonoBehaviour
 {
 	/* 훅 */
     [HideInInspector] public Vector2 destiny;
-	[HideInInspector] public float speed;		// 훅 발사 속도
+	[HideInInspector] public float speed;			// 훅 발사 속도
+	[HideInInspector] public bool isHit = false;	// 땅 충돌 여부 (발사 시 갈고리가 땅에 부딪혔는지)
 
 	/* 훅 물리 */
 	[Header("훅 물리")]
@@ -32,7 +31,6 @@ public class TestHooking : MonoBehaviour
 
 	private List<HookSegment> hookSegments = new List<HookSegment>();
 	private bool isPlayedDraftSound = false;        // 사운드 재생 여부
-	private bool isLineMax = false;                 // 훅 길이 최대 여부
 
 	private void Awake()
     {
@@ -41,11 +39,10 @@ public class TestHooking : MonoBehaviour
 
     private void Start()
     {
-		lineLen = Mathf.Max(hookVal.minSegmentCnt, lineLen);
-		segmentCnt = Mathf.Max((int)(hookVal.minSegmentCnt * hookVal.segmentLen), (int)(lineLen * hookVal.segmentLen)); // 세그먼트 개수 계산
+		lineLen = Mathf.Max(HookValue.minSegmentLen, lineLen);
+		segmentCnt = Mathf.Max(HookValue.minSegmentLen, (int)(lineLen / HookValue.segmentLen)); // 세그먼트 개수 계산
 		line.positionCount = segmentCnt;
 		speed = GameManager.Instance.playerStatsRuntime.hookSpeed;
-
         player = GameObject.FindGameObjectWithTag(TagName.player);		// 플레이어 태그로 정보 불러오기
 
 		currentLength = lineLen;
@@ -74,10 +71,11 @@ public class TestHooking : MonoBehaviour
 		for (int i = 0; i < constraintRuns; i++)
             ApplyContraints();
 
-		ClampPlayerDistance();	// 플레이어 거리 제한
+		ClampPlayerDistance();  // 플레이어 거리 제한
 
-		HookMoveAction();       // 훅 오브젝트 이동 액션
-		RenderLine();           // 라인 그리기
+		if (isHit) HookShootAction();       // 훅 발사 액션
+		else HookShootReelAction();			// 훅 발사/회수 액션
+			RenderLine();           // 라인 그리기
 	}
 
 	// 플레이어가 로프 길이 밖으로 못 나가게 제한
@@ -138,7 +136,7 @@ public class TestHooking : MonoBehaviour
             HookSegment currSeg = hookSegments[i];
             HookSegment nextSeg = hookSegments[i + 1];
 
-            float dist = (currSeg.CurrPos - nextSeg.CurrPos).magnitude;	// 두 세그먼트 사이 거리 계산
+            float dist = Vector2.Distance(currSeg.CurrPos, nextSeg.CurrPos);	// 두 세그먼트 사이 거리 계산
             float difference = dist - segLen;							// 세그먼트 길이 차이 계산
 
             Vector2 changeDir = (currSeg.CurrPos - nextSeg.CurrPos).normalized;		// 변경할 세그먼트 방향 정규화
@@ -158,27 +156,30 @@ public class TestHooking : MonoBehaviour
         }
     }
 
-	// 훅 이동 액션
-	public void HookMoveAction()
+	// 훅 발사 액션
+	public void HookShootAction()
 	{
-		// 이동
-		transform.position = Vector2.MoveTowards(transform.position, destiny, speed);
+		// 훅 이동
+		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
 
 		// 줄 이동
-		// 마지막 세그먼트를 훅 위치로 고정
-		//HookSegment last = hookSegments[hookSegments.Count - 1];
-		//last.CurrPos = transform.position;
-		//hookSegments[hookSegments.Count - 1] = last;
+		
+	}
 
-		//// 나머지 세그먼트 부드럽게 따라오게
-		//for (int i = hookSegments.Count - 2; i >= 0; i--)
-		//{
-		//	HookSegment seg = hookSegments[i];
-		//	Vector2 nextPos = hookSegments[i + 1].CurrPos;
+	// 훅 발사/회수 액션
+	public void HookShootReelAction()
+	{
+		// 훅 이동
+		Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+		Vector2 dir = (mouseWorld - (Vector2)transform.position).normalized;
+		Vector2 destinyPos = (Vector2)transform.position + dir * HookValue.maxSegmentLen;
+		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
 
-		//	seg.CurrPos = Vector2.Lerp(seg.CurrPos, nextPos, 0.35f);
-		//	hookSegments[i] = seg;
-		//}
+		// 줄 이동
+
+		// 훅 회수
+
+		// 줄 회수
 	}
 
 	// 줄 길이 변경
@@ -201,20 +202,20 @@ public class TestHooking : MonoBehaviour
 			isPlayedDraftSound = false;
 		}
 
-		targetLength = Mathf.Clamp(targetLength, hookVal.minSegmentCnt, lineLen);
+		targetLength = Mathf.Clamp(targetLength, HookValue.minSegmentLen, lineLen);
 	}
 
 	// 줄 길어지게
 	private void IncreaseRopeLength()
 	{
-		if(targetLength < hookVal.maxSegmentCnt)
+		if(targetLength < HookValue.maxSegmentLen)
 			targetLength += reelSpeed * Time.fixedDeltaTime;
 	}
 
 	// 줄 짧아지게
 	private void DecreaseRopeLength()
 	{
-		if (targetLength > hookVal.minSegmentCnt)
+		if (targetLength > HookValue.minSegmentLen)
 			targetLength -= reelSpeed * Time.fixedDeltaTime;
 	}
 

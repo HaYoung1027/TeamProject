@@ -92,8 +92,6 @@ public class TestGrapplingHook : MonoBehaviour
 			LayerMask mask = ~LayerMask.GetMask(tagName.player);                                // 레이케스트 땅만 맞출 수 있도록 마스크 생성
 			RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);      // 자기 위치에서 dir 방향으로 광선 발사
 
-			hook.GetComponent<TestHooking>().HookMoveAction();      // 훅 움직이는 액션
-
 			if (hit)
 			{
 				// 효과음 재생
@@ -119,7 +117,7 @@ public class TestGrapplingHook : MonoBehaviour
 
 					hooking = curHook.GetComponent<TestHooking>();
 					hooking.destiny = destiny;
-					curHook.SetActive(true);
+					hooking.isHit = true;
 
 					// 점 사이 거리를 고려하여 거리만큼의 점 갯수 구하기
 					float len = Vector2.Distance(transform.position, destiny);
@@ -132,17 +130,16 @@ public class TestGrapplingHook : MonoBehaviour
 		// 좌클릭 해제시
 		else if (Mouse.current.leftButton.wasReleasedThisFrame)
 		{
+			// 훅 할당 해제
+			if (curHook != null)
+				Destroy(curHook);
+
 			if (isAttach)
 			{
-				if (curHook != null)
-				{
-					curHook.SetActive(false);
-					Destroy(curHook);
-				}
-
 				isAttach = false;
 				hasPlayedAttachSound = false;
 
+				// 줄 놓았을 때 가속도 조정
 				Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
 				Vector2 slow = new Vector2(0.25f, 0.7f);
 				playerRb.linearVelocity *= slow;
@@ -152,7 +149,7 @@ public class TestGrapplingHook : MonoBehaviour
 		// 요소를 잡고 있고, 마우스를 우클릭 했을 경우
 		else if (isGrab && Mouse.current.rightButton.wasPressedThisFrame)
 		{
-			Vector2 worldPos = mainCam.ScreenToWorldPoint(Mouse.current.position.ReadValue());             // 월드 좌표
+			Vector2 worldPos = mainCam.ScreenToWorldPoint(Mouse.current.position.ReadValue());	// 월드 좌표
 			Vector2 dir = (worldPos - (Vector2)transform.position).normalized;      // 광선 방향
 			ThrowElement(hookingList[0], dir);  // 적 던지기
 			isGrab = false;
