@@ -66,11 +66,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private bool isJump = false;
     private bool wasGrounded;		// 이전 프레임 바닥 상태 저장
     private bool justLanded;
-	private Silhouette solihoutte;	// 잔상효과
 
+	private Silhouette solihoutte;  // 잔상효과
+	private float slowTime = 0.5f;	// 슬로우 지속 시간
+
+	/* 코루틴 */
     private Coroutine playerDieCoroutine;
 	private Coroutine damageCanvasCoroutine;
 	private Coroutine damagedColorCoroutine;
+	private Coroutine damagedCheckCoroutine;	// 데미지 시간 체크 코루틴
 
 	void Awake()
 	{
@@ -211,8 +215,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (damagedColorCoroutine != null)
 			StopCoroutine(damagedColorCoroutine);
 
+		if (damagedCheckCoroutine != null)
+			StopCoroutine(damagedCheckCoroutine);
+
 		damageCanvasCoroutine = StartCoroutine(ShowDamagedCanvas());
 		damagedColorCoroutine = StartCoroutine(PlayerDamagedColor());
+		damagedCheckCoroutine = StartCoroutine(CheckPlagerDamagedTime());
 	}
 
 	IEnumerator PlayerDie()             // 데미지 UI 코루틴
@@ -245,6 +253,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 		sprite.color = Color.white;
 	}
 
+	IEnumerator CheckPlagerDamagedTime()		// 플레이어 데미지 시간 체크
+	{
+		StartSlow();
+		solihoutte.Active = true;
+		yield return new WaitForSeconds(slowTime);
+		solihoutte.Active = false;
+		StopSlow();
+	}
+
 	public void CheckGround(Collision2D collision)      // 바닥 체크
 	{
 		isGrounded = Physics2D.OverlapCircle(pos.position, checkRadious, isLayer);
@@ -274,19 +291,19 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (isGrounded)
 		{
             bool hasMoveInput = Mathf.Abs(inputVec.x) > 0.01f;      // 플레이어가 가만히 있을 때
-            if (!hasMoveInput)
+            if (hasMoveInput)
 			{
-                curTime += Time.deltaTime;
+				SetPlayerState(playerState.Run);
+				curTime = 0f;
+				isRunning = true;
+			}
+			else
+			{
+				curTime += Time.deltaTime;
 
 				if (curTime >= maxTime)
 					SetPlayerState(playerState.Idle);
 				isRunning = false;
-			}
-			else
-			{
-                SetPlayerState(playerState.Run);
-				curTime = 0f;
-				isRunning = true;
 			}
 		}
 		else
