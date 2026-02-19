@@ -95,7 +95,27 @@ public class AudioManager : MonoBehaviour
     // 플레이어
     public void PlayDamagedSound(float volume = 1f) => PlaySFX(playerDamaged, volume);
     public void PlayJumpSound(float volume = 1f) => PlaySFX(playerJump, volume);
-    public void PlayRunSound(float volume = 1f) => PlaySFX(playerRun, volume);
+    public void PlayRunSound(float volume = 1f)
+    {
+        if (sfxSource == null || playerRun == null) return;
+
+        // 이미 발소리 재생 중이면 무시
+        if (sfxSource.isPlaying && sfxSource.clip == playerRun)
+            return;
+
+        sfxSource.clip = playerRun;
+        sfxSource.loop = true;
+        sfxSource.volume = volume;
+        sfxSource.Play();
+    }
+
+    public void StopRunSound() // 전체 소리 멈춤 버그
+    {
+        if (sfxSource == null) return;
+
+        if (sfxSource.isPlaying && sfxSource.clip == playerRun)
+            sfxSource.Stop();
+    }
 
     // 적
     public void EnemyAttackSound(float volume = 1f) => PlaySFX(enemyAttack, volume);
