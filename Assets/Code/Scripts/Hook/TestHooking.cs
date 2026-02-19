@@ -73,8 +73,9 @@ public class TestHooking : MonoBehaviour
 
 		ClampPlayerDistance();  // 플레이어 거리 제한
 
-		ShootMoveAction();       // 훅 발사 액션
-		RenderLine();           // 라인 그리기
+		if (isHit) HookShootAction();       // 훅 발사 액션
+		else HookShootReelAction();			// 훅 발사/회수 액션
+			RenderLine();           // 라인 그리기
 	}
 
 	// 플레이어가 로프 길이 밖으로 못 나가게 제한
@@ -155,13 +156,30 @@ public class TestHooking : MonoBehaviour
         }
     }
 
-	// 훅 이동 액션
-	public void ShootMoveAction()
+	// 훅 발사 액션
+	public void HookShootAction()
 	{
 		// 훅 이동
 		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
 
 		// 줄 이동
+		
+	}
+
+	// 훅 발사/회수 액션
+	public void HookShootReelAction()
+	{
+		// 훅 이동
+		Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+		Vector2 dir = (mouseWorld - (Vector2)transform.position).normalized;
+		Vector2 destinyPos = (Vector2)transform.position + dir * HookValue.maxSegmentLen;
+		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
+
+		// 줄 이동
+
+		// 훅 회수
+
+		// 줄 회수
 	}
 
 	// 줄 길이 변경

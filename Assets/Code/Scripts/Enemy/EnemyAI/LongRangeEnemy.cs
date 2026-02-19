@@ -134,16 +134,20 @@ public class LongRangeEnemy : MonoBehaviour
         transform.localScale = scale;
     }
 
-    public void HandleGrabbed()
-    {
-        if (isGrabbed)          // 플레이어에게 잡혔을 때
-        {
-            ResetAttackState(); // 에이밍 UI 제거
-            return;
-        }
-    }
+	public void HandleGrabbed()
+	{
+		if (isGrabbed)
+		{
+			ResetAttackState();
 
-    public void HandleAttack()
+			targetPlayer = null;
+			targetAimPoint = null;
+
+			return;
+		}
+	}
+
+	public void HandleAttack()
     {
         if (targetPlayer != null && targetAimPoint != null)
         {
