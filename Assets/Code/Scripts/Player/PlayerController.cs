@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -13,6 +14,8 @@ using tagName = Globals.TagName;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
+    [Header("Audio Mixer")]
+    public AudioMixer mixer;
     [Header("Global Volume 오브젝트")]
     public Volume globalVolume;
     [Header("Glitch Global Volume 오브젝트")]
@@ -372,7 +375,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             colorAdjustments.saturation.value = -50f;
 		if (bloom != null)
             bloom.intensity.value = 3;
-
+        mixer.SetFloat("MasterCutoff", 1000f);   // 먹먹
         ApplySlowColor();
     }
 
@@ -386,6 +389,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             colorAdjustments.saturation.value = 0f;
         if (bloom != null)
             bloom.intensity.value = 0.8f;
+        mixer.SetFloat("MasterCutoff", 22000f); // 원래 소리
         ApplyNormalColor();
 	}
 
