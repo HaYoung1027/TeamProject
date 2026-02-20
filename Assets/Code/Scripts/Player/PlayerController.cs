@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private bool justLanded;
 	private Silhouette solihoutte;  // 잔상효과
     private ColorAdjustments colorAdjustments;
+	private Bloom bloom;
     private Coroutine playerDieCoroutine;
 	private Coroutine damageCanvasCoroutine;
 	private Coroutine damagedColorCoroutine;
@@ -95,6 +96,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
 
         if (!globalVolume.profile.TryGet(out colorAdjustments))
+            Debug.LogError("Volume Profile에 없음");
+        if (!globalVolume.profile.TryGet(out bloom))
             Debug.LogError("Volume Profile에 없음");
     }
 
@@ -359,8 +362,21 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 		slowGaugeSlider.value = slowGauge / slowMaxGauge;
 	}
+    void StartSlow()    // 슬로우 효과 시작
+    {
+        if (isSlow) return;
+        isSlow = true;
+        Time.timeScale = slowFactor;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+		if (colorAdjustments != null)
+            colorAdjustments.saturation.value = -50f;
+		if (bloom != null)
+            bloom.intensity.value = 3;
 
-	void StopSlow()     // 슬로우 효과 종료
+        ApplySlowColor();
+    }
+
+    void StopSlow()     // 슬로우 효과 종료
 	{
 		if (!isSlow) return;
 		isSlow = false;
@@ -368,18 +384,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 		Time.fixedDeltaTime = 0.02f;
         if (colorAdjustments != null)
             colorAdjustments.saturation.value = 0f;
+        if (bloom != null)
+            bloom.intensity.value = 0.8f;
         ApplyNormalColor();
-	}
-
-	void StartSlow()    // 슬로우 효과 시작
-	{
-		if (isSlow) return;
-		isSlow = true;
-		Time.timeScale = slowFactor;
-		Time.fixedDeltaTime = 0.02f * Time.timeScale;
-		if (colorAdjustments != null)
-			colorAdjustments.saturation.value = -50f;
-		ApplySlowColor();
 	}
 
 	void ApplySlowColor()   // 슬로우 ON
