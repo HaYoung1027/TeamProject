@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (!isRunning)
 		{
 			walkSoundTimer = 0f; // 멈추면 타이머 리셋
-			GameManager.Instance.audioManager.StopRunSound();    // 효과음 재생 중지
+			//GameManager.Instance.audioManager.StopRunSound();    // 효과음 재생 중지
 			isPlayedRunSound = false;
 			return;
 		}
@@ -194,7 +194,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			// 효과음 재생
 			if(!isPlayedRunSound)
 			{
-				GameManager.Instance.audioManager.PlayRunSound(0.5f);
+				//GameManager.Instance.audioManager.PlayRunSound(0.5f);
 				isPlayedRunSound = true;
 			}
 			walkSoundTimer = 0f;
