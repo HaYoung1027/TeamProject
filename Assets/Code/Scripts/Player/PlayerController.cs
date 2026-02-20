@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
@@ -12,7 +13,9 @@ using tagName = Globals.TagName;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
-	[Header("Glitch Global Volume 오브젝트")]
+    [Header("Global Volume 오브젝트")]
+    public Volume globalVolume;
+    [Header("Glitch Global Volume 오브젝트")]
 	public GameObject glitchGlobalVolume;
 	[Header("TV Global Volume 오브젝트")]
 	public GameObject tvGlobalVolume;
@@ -66,8 +69,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private bool isJump = false;
     private bool wasGrounded;		// 이전 프레임 바닥 상태 저장
     private bool justLanded;
-	private Silhouette solihoutte;	// 잔상효과
-
+	private Silhouette solihoutte;  // 잔상효과
+    private ColorAdjustments colorAdjustments;
     private Coroutine playerDieCoroutine;
 	private Coroutine damageCanvasCoroutine;
 	private Coroutine damagedColorCoroutine;
@@ -85,7 +88,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 	void Start()
 	{
         SetPlayerState(playerState.Idle);
-	}
+        if (globalVolume == null)
+        {
+            Debug.LogError("Global Volume이 할당되지 않았음");
+            return;
+        }
+
+        if (!globalVolume.profile.TryGet(out colorAdjustments))
+            Debug.LogError("Volume Profile에 없음");
+    }
 
     void FixedUpdate()
     {
@@ -355,8 +366,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isSlow = false;
 		Time.timeScale = 1f;            // 시간 원래대로
 		Time.fixedDeltaTime = 0.02f;
-
-		ApplyNormalColor();
+        if (colorAdjustments != null)
+            colorAdjustments.saturation.value = 0f;
+        ApplyNormalColor();
 	}
 
 	void StartSlow()    // 슬로우 효과 시작
@@ -365,7 +377,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isSlow = true;
 		Time.timeScale = slowFactor;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
-
+		if (colorAdjustments != null)
+			colorAdjustments.saturation.value = -50f;
 		ApplySlowColor();
 	}
 

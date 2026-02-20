@@ -227570,6 +227570,10 @@ PrefabInstance:
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4756874103759277193, guid: aacc80020f45af9459318ec226fa961d, type: 3}
+      propertyPath: globalVolume
+      value: 
+      objectReference: {fileID: 290433092}
+    - target: {fileID: 4756874103759277193, guid: aacc80020f45af9459318ec226fa961d, type: 3}
       propertyPath: damagedCanvas
       value: 
       objectReference: {fileID: 1416734003}
