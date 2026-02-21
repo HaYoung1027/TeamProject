@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Silhouette : MonoBehaviour
@@ -115,4 +116,9 @@ public class Silhouette : MonoBehaviour
 			}
 		}
 	}
+
+    private void OnDestroy()
+    {
+		DefaultSet();
+    }
 }
