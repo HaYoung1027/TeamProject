@@ -9,6 +9,15 @@ public class EnemyBullet : MonoBehaviour
     public float lifeTime = 2f;
     private Vector2 moveDir;
 
+    PlayerController player;    // 플레이어 정보
+    Silhouette silhouette;      // 잔상
+
+    private void Start()
+    {
+        player = GameManager.Instance.playerController;
+        silhouette = GetComponent<Silhouette>();
+    }
+
     void OnEnable()
     {
         GameObject player = GameObject.FindGameObjectWithTag(tagName.player);       // 발사 순간 플레이어 방향 고정
@@ -26,6 +35,8 @@ public class EnemyBullet : MonoBehaviour
     void Update()
     {
         transform.Translate(moveDir * speed * Time.deltaTime, Space.World);
+
+        silhouette.Active = player.isSlow;      // 슬로우 여부에 따라 잔상 여부 변경
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -44,10 +55,12 @@ public class EnemyBullet : MonoBehaviour
     void ReturnToPool()
     {
         GameManager.Instance.poolManager.ReturnToPool(gameObject);
+        Destroy(silhouette);    // 잔상 제거
     }
 
     void OnDisable()
     {
         CancelInvoke();     // 풀에서 다시 꺼낼 때 중복 Invoke 방지
+        Destroy(silhouette);    // 잔상 제거
     }
 }
