@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static Globals;
@@ -73,9 +74,8 @@ public class TestHooking : MonoBehaviour
 
 		ClampPlayerDistance();  // 플레이어 거리 제한
 
-		if (isHit) HookShootAction();       // 훅 발사 액션
-		else HookShootReelAction();			// 훅 발사/회수 액션
-			RenderLine();           // 라인 그리기
+		HookShootAction();      // 훅 발사 액션
+		RenderLine();           // 라인 그리기
 	}
 
 	// 플레이어가 로프 길이 밖으로 못 나가게 제한
@@ -162,30 +162,38 @@ public class TestHooking : MonoBehaviour
 		// 훅 이동
 		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
 
-		// 줄 이동
+		// TODO: 줄 이동
 		
 	}
 
 	// 훅 발사/회수 액션
-	public void HookShootReelAction()
-	{
-		// 훅 이동
-		Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-		Vector2 dir = (mouseWorld - (Vector2)transform.position).normalized;
-		Vector2 destinyPos = (Vector2)transform.position + dir * HookValue.maxSegmentLen;
-		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
+	//public void HookShootReelAction()
+	//{
+	//	// 훅 이동
+	//	Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+	//	Vector2 dir = (mouseWorld - (Vector2)transform.position).normalized;
+	//	Vector2 destinyPos = (Vector2)transform.position + dir * HookValue.maxSegmentLen;
+	//	transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
 
-		// 줄 이동
+	//	// 줄 이동
 
-		// 훅 회수
+	//	// 훅 회수
 
-		// 줄 회수
-	}
+	//	// 줄 회수
+	//}
 
 	// 줄 길이 변경
 	void HandleRopeLengthInput()
 	{
-		if (Keyboard.current.spaceKey.isPressed)
+		// 훅 부딪힌 위치 아래 거리의 90% 길이로 길이 보정
+		Vector2 destinyPos = destiny + new Vector2(0f, -1f);    // 땅과 부딪힌 지점의 1만큼 아래로 위치 설정 (버그 방지)
+		LayerMask mask = LayerMask.GetMask(TagName.ground);		// 레이캐스트 땅만 맞출 수 있도록 마스크 생성
+        RaycastHit2D hit = Physics2D.Raycast(destinyPos, Vector2.down, HookValue.maxSegmentLen, mask);        // 자기 위치에서 dir 방향으로 광선 발사
+		if(hit && Vector2.Distance(destiny, hit.point) * 0.85f < currentLength)
+            DecreaseRopeLength();
+
+        // 스페이스 키 입력 시 줄 줄어들기
+        if (Keyboard.current.spaceKey.isPressed)
 		{
 			DecreaseRopeLength();
 
@@ -195,7 +203,6 @@ public class TestHooking : MonoBehaviour
 				isPlayedDraftSound = true;
 			}
 		}
-
 		if (Keyboard.current.spaceKey.wasReleasedThisFrame)
 		{
 			GameManager.Instance.audioManager.StopSFX();
