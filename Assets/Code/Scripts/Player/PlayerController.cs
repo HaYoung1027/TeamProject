@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Coroutine playerDieCoroutine;
 	private Coroutine damageCanvasCoroutine;
 	private Coroutine damagedColorCoroutine;
-	private Coroutine damagedCheckCoroutine;	// 데미지 시간 체크 코루틴
+	private Coroutine slowCoroutine;			// 데미지 시간 체크 코루틴
 
 	void Awake()
 	{
@@ -232,12 +232,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (damagedColorCoroutine != null)
 			StopCoroutine(damagedColorCoroutine);
 
-		if (damagedCheckCoroutine != null)
-			StopCoroutine(damagedCheckCoroutine);
+		if (slowCoroutine != null)
+			StopCoroutine(slowCoroutine);
 
 		damageCanvasCoroutine = StartCoroutine(ShowDamagedCanvas());
 		damagedColorCoroutine = StartCoroutine(PlayerDamagedColor());
-		damagedCheckCoroutine = StartCoroutine(CheckPlagerDamagedTime());
+		slowCoroutine = StartCoroutine(CheckPlayerSlowTime());
 	}
 
 	IEnumerator PlayerDie()             // 데미지 UI 코루틴
@@ -270,7 +270,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		sprite.color = Color.white;
 	}
 
-	IEnumerator CheckPlagerDamagedTime()		// 플레이어 데미지 시간 체크
+	IEnumerator CheckPlayerSlowTime()		// 플레이어 데미지 시간 체크
 	{
 		StartSlow();
 		solihoutte.Active = true;
@@ -344,20 +344,32 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (collision.gameObject.CompareTag(tagName.ground))
 			isGrounded = false;
 	}
+
 	public void HandleSlowMode()        // 슬로우 모드
 	{
 		if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
 		{
-			if (!isSlow && slowGauge > 0f)
+			if(!isSlow)
 			{
-				StartSlow();
+				// 슬로우 코루틴 시작
+				slowCoroutine = StartCoroutine(CheckPlayerSlowTime());
+                Debug.Log("start slow");
+
 				solihoutte.Active = true;
 			}
-			else
+		}
+		// 그래플링 훅 발사 시 슬로우모션 종료
+		if(grappling.isAttach)
+		{
+			if(isSlow)
 			{
 				StopSlow();
-				solihoutte.Active = false;
-			}
+
+                if (slowCoroutine != null)
+                    StopCoroutine(slowCoroutine);
+
+                solihoutte.Active = false;
+            }
 		}
 	}
 
@@ -371,7 +383,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 			if (slowGauge <= 0f)
 			{
 				slowGauge = 0f;
-				StopSlow(); // 자동 해제
 			}
 		}
 		else
