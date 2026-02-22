@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2426618529680953460}
   m_Layer: 0
   m_Name: Building0-2_6
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1229637156, guid: 0470fc33170c5714dba8f8ac6a7bf4a2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

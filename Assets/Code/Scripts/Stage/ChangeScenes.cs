@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Globals;
 
 public class ChangeScenes : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class ChangeScenes : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag(TagName.player))
         {
             Debug.Log("Player detected!");
             new SceneChanger().LoadNextScene();
