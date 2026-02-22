@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Level/Scenes/2_Stage0_1.unity
     guid: 55a301de59b31a0478c8087d42749b3d
   - enabled: 1
+    path: Assets/Level/Scenes/2-0_TutorialStage.unity
+    guid: 81c81f20f1d3b3b4495cbaa36b4f17e5
+  - enabled: 1
     path: Assets/Level/Scenes/Test_Inseong.unity
     guid: 407c9eb344099b943bd7ffd774fef2e9
   - enabled: 1
