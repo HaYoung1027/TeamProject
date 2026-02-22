@@ -1,19 +1,22 @@
 fileFormatVersion: 2
-guid: d80e338a57c3bf04386bf00b07a67565
+guid: 469379d8c2eb75d40b2eda735883de1e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3041617630665223435
-    second: BG1_5_0
+      213: 8197101451294945211
+    second: BG1_front_0
   - first:
-      213: 2778598704762547386
-    second: BG1_5_1
+      213: 6796207204778668310
+    second: BG1_front_1
   - first:
-      213: 7233308585188721119
-    second: BG1_5_2
+      213: -4293413728060463143
+    second: BG1_front_2
   - first:
-      213: 276183402466075565
-    second: BG1_5_3
+      213: 7017276987451420482
+    second: BG1_front_3
+  - first:
+      213: 2174677434441167950
+    second: BG1_front_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +49,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -109,89 +112,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BG1_5_0
+      name: BG1_front_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 620
-        width: 152
-        height: 263
+        y: 0
+        width: 2000
+        height: 1000
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5f252ad41e00ac5d0800000000000000
-      internalID: -3041617630665223435
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BG1_5_1
-      rect:
-        serializedVersion: 2
-        x: 853
-        y: 376
-        width: 509
-        height: 279
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: abc6bb2ecc09f8620800000000000000
-      internalID: 2778598704762547386
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BG1_5_2
-      rect:
-        serializedVersion: 2
-        x: 39
-        y: 476
-        width: 117
-        height: 109
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fd105f2a5dfd16460800000000000000
-      internalID: 7233308585188721119
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BG1_5_3
-      rect:
-        serializedVersion: 2
-        x: 1731
-        y: 16
-        width: 269
-        height: 401
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: da369dc575335d300800000000000000
-      internalID: 276183402466075565
+      spriteID: bbf26400754f1c170800000000000000
+      internalID: 8197101451294945211
       vertices: []
       indices: 
       edges: []
@@ -200,7 +137,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: f6f418f78c3445a43bc43ca12f083f53
     internalID: 0
     vertices: []
     indices: 
@@ -208,12 +145,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":2000.0,"y":1000.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      BG1_5_0: -3041617630665223435
-      BG1_5_1: 2778598704762547386
-      BG1_5_2: 7233308585188721119
-      BG1_5_3: 276183402466075565
+      BG1_front_0: 8197101451294945211
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
