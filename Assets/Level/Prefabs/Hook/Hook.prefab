@@ -109,8 +109,8 @@ MonoBehaviour:
   speed: 1
   isHit: 0
   constraintRuns: 1500
-  gravityForce: {x: 0, y: -80}
-  dampingFactor: 0.98
+  gravityForce: {x: 0, y: -50}
+  dampingFactor: 0.95
   lengthChangeSpeed: 8
   reelSpeed: 15
   segmentCnt: 0
