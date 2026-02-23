@@ -28973,7 +28973,7 @@ MonoBehaviour:
   objectExplosion: {fileID: 8300000, guid: 92ad0766e2cf37c45bc6a99841264120, type: 3}
   hookAttachMetal: {fileID: 8300000, guid: 42b16a9e8d7e0f24192853495996382e, type: 3}
   hookAttachEnemy: {fileID: 8300000, guid: 236bcf4efda76c84c9a6b6e961b4e0d2, type: 3}
-  hookDraft: {fileID: 8300000, guid: 0056bba062b850442a3ea463858dbeeb, type: 3}
+  hookDraft: {fileID: 0}
   hookShoot: {fileID: 8300000, guid: 697b7c5576edc20498d884acf6594537, type: 3}
   hookThrowEnemy: {fileID: 8300000, guid: bfb359fc94531cb40baf7e327f9071c3, type: 3}
   textTyping: {fileID: 8300000, guid: 94f6544f9df800540aaaef842e4c0731, type: 3}
