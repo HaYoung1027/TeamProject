@@ -17,6 +17,7 @@ TagManager:
   - ThrowingObject
   - Bullet
   - LaserNot
+  - Trigger
   layers:
   - Default
   - TransparentFX
