@@ -160,7 +160,7 @@ public class TestHooking : MonoBehaviour
 	public void HookShootAction()
 	{
 		// 훅 이동
-		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.deltaTime);
+		transform.position = Vector2.MoveTowards(transform.position, destiny, speed * Time.fixedDeltaTime);
 
 		// TODO: 줄 이동
 		
