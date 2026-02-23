@@ -107,6 +107,7 @@ public class TestHooking : MonoBehaviour
 
         line.SetPositions(ropePos);
 		line.sortingOrder = 100;
+		line.gameObject.layer = 15;
     }
 
     // 줄 구체화 (Verlet 적산법 사용)
