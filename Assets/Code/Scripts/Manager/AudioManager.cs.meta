@@ -15,9 +15,9 @@ MonoImporter:
   - objectExplosion: {fileID: 8300000, guid: 92ad0766e2cf37c45bc6a99841264120, type: 3}
   - hookAttach: {fileID: 8300000, guid: 723251075cda21e4e82b4b82d0d25156, type: 3}
   - hookDraft: {fileID: 8300000, guid: 0056bba062b850442a3ea463858dbeeb, type: 3}
-  - hookShoot: {fileID: 8300000, guid: 88699f601e27fe244b2c0b0b4240c5ac, type: 3}
+  - hookShoot: {fileID: 8300000, guid: 697b7c5576edc20498d884acf6594537, type: 3}
   - hookThrowEnemy: {fileID: 8300000, guid: 0e895b0fb5d70ff4f8217fab6aab3a57, type: 3}
-  - textTyping: {fileID: 8300000, guid: 4eaaca373f0ceec44970de3f11833ae0, type: 3}
+  - textTyping: {fileID: 8300000, guid: 94f6544f9df800540aaaef842e4c0731, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

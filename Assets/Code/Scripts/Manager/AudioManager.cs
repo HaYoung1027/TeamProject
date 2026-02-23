@@ -23,7 +23,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip objectExplosion;
 
     [Header("Hook SFX")]
-    public AudioClip hookAttach;
+    public AudioClip hookAttachMetal;
+    public AudioClip hookAttachEnemy;
     public AudioClip hookDraft;
     public AudioClip hookShoot;
     public AudioClip hookThrowEnemy;
@@ -125,7 +126,8 @@ public class AudioManager : MonoBehaviour
     public void ObjectExplosionSound(float volume = 1f) => PlaySFX(objectExplosion, volume);
 
     // 갈고리
-    public void HookAttachSound(float volume = 1f) => PlaySFX(hookAttach, volume);
+    public void HookAttachMetalSound(float volume = 1f) => PlaySFX(hookAttachMetal, volume);
+    public void HookAttachEnemySound(float volume = 1f) => PlaySFX(hookAttachEnemy, volume);
     public void HookDraftSound(float volume = 1f) => PlaySFX(hookDraft, volume);
     public void HookShootSound(float volume = 1f) => PlaySFX(hookShoot, volume);
     public void HookThrowEnemySound(float volume = 1f) => PlaySFX(hookThrowEnemy, volume);
