@@ -17,7 +17,7 @@ public class SceneChanger : MonoBehaviour
 
 	public void LoadNextScene()    // ¥Ÿ¿Ωæ¿ ∑ŒµÂ
 	{
-		if (SceneManager.GetActiveScene().buildIndex < 4)
+		if (SceneManager.GetActiveScene().buildIndex < 6)
 		{
 			int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
 			SceneManager.LoadScene(nextIndex);
