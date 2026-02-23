@@ -50,8 +50,10 @@ public class Silhouette : MonoBehaviour
 				{
 					GameObject SpriteCopy = new GameObject(transform.gameObject.name + " SilhouetteList " + i); // 빈 게임오브젝트를 만들어서
 					SpriteCopy.transform.parent = Bank.transform;
-					SpriteCopy.AddComponent<SpriteRenderer>(); // 스프라이트렌더를 넣고
-					SilhouetteList.Insert(i, SpriteCopy); // 한번에 관리하기 쉽도록 리스트에 넣는다.
+					SpriteRenderer sr= SpriteCopy.AddComponent<SpriteRenderer>(); // 스프라이트렌더를 넣고
+                    sr.sortingOrder = 1;
+
+                    SilhouetteList.Insert(i, SpriteCopy); // 한번에 관리하기 쉽도록 리스트에 넣는다.
 														  //오브젝트와 스프라이트 렌더를 생성하는 과정에서 성능저하가 있을 가능성이 있음.
 				}
 			}
