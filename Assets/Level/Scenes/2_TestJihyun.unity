@@ -224268,7 +224268,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -74.77703, y: 75.593895, z: -10}
+  m_LocalPosition: {x: -5.87703, y: 3.5538998, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -226286,7 +226286,8 @@ MonoBehaviour:
   enemyAttack: {fileID: 8300000, guid: 2aa4e739239971349859b22ce2740c8d, type: 3}
   enemyShoot: {fileID: 8300000, guid: 65f3a4ec35166f841a429aabf0d9f30c, type: 3}
   objectExplosion: {fileID: 8300000, guid: 92ad0766e2cf37c45bc6a99841264120, type: 3}
-  hookAttach: {fileID: 8300000, guid: 723251075cda21e4e82b4b82d0d25156, type: 3}
+  hookAttachMetal: {fileID: 0}
+  hookAttachEnemy: {fileID: 0}
   hookDraft: {fileID: 8300000, guid: 0056bba062b850442a3ea463858dbeeb, type: 3}
   hookShoot: {fileID: 8300000, guid: 88699f601e27fe244b2c0b0b4240c5ac, type: 3}
   hookThrowEnemy: {fileID: 8300000, guid: 0e895b0fb5d70ff4f8217fab6aab3a57, type: 3}
@@ -228932,11 +228933,11 @@ PrefabInstance:
       objectReference: {fileID: 4714670670714101203, guid: 41f038095ff068f41a0fb08061574cbe, type: 3}
     - target: {fileID: 1276845852994878136, guid: aacc80020f45af9459318ec226fa961d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -82.4
+      value: -13.5
       objectReference: {fileID: 0}
     - target: {fileID: 1276845852994878136, guid: aacc80020f45af9459318ec226fa961d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 73.64
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 1276845852994878136, guid: aacc80020f45af9459318ec226fa961d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -231052,7 +231053,7 @@ Transform:
   m_GameObject: {fileID: 2027666401}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -74.77703, y: 75.593895, z: -10}
+  m_LocalPosition: {x: -5.87703, y: 3.5538998, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

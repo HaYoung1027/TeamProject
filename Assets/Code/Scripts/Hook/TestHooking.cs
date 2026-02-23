@@ -49,11 +49,9 @@ public class TestHooking : MonoBehaviour
 		currentLength = lineLen;
 		targetLength = lineLen;
 
-		Vector3 ropeStartPoint = destiny;     // 로프 시작점 설정(플레이어 위치)
-
 		// 세그먼트 생성
 		for (int i = 0; i < segmentCnt; i++)
-			hookSegments.Add(new HookSegment(ropeStartPoint));
+			hookSegments.Add(new HookSegment(destiny));
 
 		// 훅 방향 회전
 		Vector2 dir = (Vector2)transform.position - destiny;
@@ -62,15 +60,22 @@ public class TestHooking : MonoBehaviour
 
     private void FixedUpdate()
 	{
+		Simulate();             // 줄 위치 업데이트
+
+		for (int i = 0; i < constraintRuns; i++)
+			ApplyContraints();
+
 		HandleRopeLengthInput(); // 입력 -> 목표 길이 변경
 
 		// 목표 길이를 부드럽게 따라감
 		currentLength = Mathf.Lerp(currentLength, targetLength, Time.fixedDeltaTime * lengthChangeSpeed);
-
-		Simulate();				// 줄 위치 업데이트
-
-		for (int i = 0; i < constraintRuns; i++)
-            ApplyContraints();
+		lineLen = currentLength;
+		if (segmentCnt > Mathf.Max(HookValue.minSegmentLen, (int)(lineLen / HookValue.segmentLen)) + 5)
+		{
+			segmentCnt -= 5;
+			line.positionCount = segmentCnt;
+			hookSegments.RemoveRange(hookSegments.Count - 5 - 1, 5);
+		}
 
 		ClampPlayerDistance();  // 플레이어 거리 제한
 
@@ -189,6 +194,7 @@ public class TestHooking : MonoBehaviour
 		Vector2 destinyPos = destiny + new Vector2(0f, -1f);    // 땅과 부딪힌 지점의 1만큼 아래로 위치 설정 (버그 방지)
 		LayerMask mask = LayerMask.GetMask(TagName.ground);		// 레이캐스트 땅만 맞출 수 있도록 마스크 생성
         RaycastHit2D hit = Physics2D.Raycast(destinyPos, Vector2.down, HookValue.maxSegmentLen, mask);        // 자기 위치에서 dir 방향으로 광선 발사
+
 		if(hit && Vector2.Distance(destiny, hit.point) * 0.85f < currentLength)
             DecreaseRopeLength();
 
@@ -228,14 +234,14 @@ public class TestHooking : MonoBehaviour
 
 	// 세그먼트 구조체
 	public struct HookSegment
-    {
-        public Vector2 CurrPos;     // 현재 세그먼트 위치
-        public Vector2 OldPos;      // 이전 세그먼트 위치
+	{
+		public Vector2 CurrPos;     // 현재 세그먼트 위치
+		public Vector2 OldPos;      // 이전 세그먼트 위치
 
-        public HookSegment(Vector2 pos)
-        {
-            CurrPos = pos;
-            OldPos = pos;
-        }
-    }
+		public HookSegment(Vector2 pos)
+		{
+			CurrPos = pos;
+			OldPos = pos;
+		}
+	}
 }

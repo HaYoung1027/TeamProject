@@ -115,6 +115,9 @@ public class TestGrapplingHook : MonoBehaviour
 				// 땅과 부딪혔을 때
 				else if (hit.collider.CompareTag(tagName.ground))
 				{
+					Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
+					playerRb.linearVelocity = Vector3.zero;		// 가속도 제거
+
 					TestHooking hooking;
 					Vector2 destiny = hit.point;    // Raycast로 쐈을 때 충돌된 위치
 					curHook = Instantiate(hook, transform.position, Quaternion.identity);   // 플레이어 위치에 훅 생성
@@ -140,13 +143,13 @@ public class TestGrapplingHook : MonoBehaviour
 
 			if (isAttach)
 			{
-				isAttach = false;
-				hasPlayedAttachSound = false;
-
 				// 줄 놓았을 때 가속도 조정
 				Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
 				Vector2 slow = new Vector2(0.25f, 0.7f);
 				playerRb.linearVelocity *= slow;
+
+				isAttach = false;
+				hasPlayedAttachSound = false;
 			}
 
 		}
