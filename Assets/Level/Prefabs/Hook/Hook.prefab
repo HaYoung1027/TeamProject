@@ -108,9 +108,9 @@ MonoBehaviour:
   destiny: {x: 0, y: 0}
   speed: 1
   isHit: 0
-  constraintRuns: 500
-  gravityForce: {x: 0, y: -50}
-  dampingFactor: 0.9
+  constraintRuns: 1500
+  gravityForce: {x: 0, y: -80}
+  dampingFactor: 0.98
   lengthChangeSpeed: 8
   reelSpeed: 15
   segmentCnt: 0
