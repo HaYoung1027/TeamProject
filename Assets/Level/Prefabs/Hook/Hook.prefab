@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5810340183387548887}
   - component: {fileID: -159553973966897452}
   - component: {fileID: -7666463445354028900}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Hook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,8 +160,8 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1977821675
+  m_SortingLayer: 2
   m_SortingOrder: 300
   m_MaskInteraction: 0
   m_Positions:

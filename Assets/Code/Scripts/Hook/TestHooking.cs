@@ -106,6 +106,8 @@ public class TestHooking : MonoBehaviour
             ropePos[i] = hookSegments[i].CurrPos;
 
         line.SetPositions(ropePos);
+		line.sortingOrder = 100;
+		line.gameObject.layer = 15;
     }
 
     // 줄 구체화 (Verlet 적산법 사용)
