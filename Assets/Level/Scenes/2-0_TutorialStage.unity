@@ -28440,13 +28440,14 @@ MonoBehaviour:
   playerDamaged: {fileID: 8300000, guid: 8a69d4d13b748c24487b2713d11d95a1, type: 3}
   playerJump: {fileID: 8300000, guid: 379a856fe2f574b43aed3f884818744f, type: 3}
   playerRun: {fileID: 8300000, guid: 67e4b97c1833ffa4ca26325922065900, type: 3}
-  enemyAttack: {fileID: 8300000, guid: 2aa4e739239971349859b22ce2740c8d, type: 3}
+  enemyAttack: {fileID: 8300000, guid: 3cdb6c2a2639c8843a073683263f5972, type: 3}
   enemyShoot: {fileID: 8300000, guid: 65f3a4ec35166f841a429aabf0d9f30c, type: 3}
   objectExplosion: {fileID: 8300000, guid: 92ad0766e2cf37c45bc6a99841264120, type: 3}
-  hookAttach: {fileID: 8300000, guid: 723251075cda21e4e82b4b82d0d25156, type: 3}
+  hookAttachMetal: {fileID: 8300000, guid: 42b16a9e8d7e0f24192853495996382e, type: 3}
+  hookAttachEnemy: {fileID: 8300000, guid: 236bcf4efda76c84c9a6b6e961b4e0d2, type: 3}
   hookDraft: {fileID: 8300000, guid: 0056bba062b850442a3ea463858dbeeb, type: 3}
-  hookShoot: {fileID: 8300000, guid: 88699f601e27fe244b2c0b0b4240c5ac, type: 3}
-  hookThrowEnemy: {fileID: 8300000, guid: 0e895b0fb5d70ff4f8217fab6aab3a57, type: 3}
+  hookShoot: {fileID: 8300000, guid: 697b7c5576edc20498d884acf6594537, type: 3}
+  hookThrowEnemy: {fileID: 8300000, guid: bfb359fc94531cb40baf7e327f9071c3, type: 3}
   textTyping: {fileID: 8300000, guid: 94f6544f9df800540aaaef842e4c0731, type: 3}
 --- !u!4 &1297810230
 Transform:

@@ -87,9 +87,10 @@ public class TestGrapplingHook : MonoBehaviour
 		// 훅이 활성화되지 않고 좌클릭 했을 때
 		if (!isAttach && Mouse.current.leftButton.wasPressedThisFrame)
 		{
-			Vector2 worldPos = mainCam.ScreenToWorldPoint(Mouse.current.position.ReadValue());  // 월드 좌표
+            GameManager.Instance.audioManager.HookShootSound(0.5f);								// 갈고리 발사 효과음
+            Vector2 worldPos = mainCam.ScreenToWorldPoint(Mouse.current.position.ReadValue());  // 월드 좌표
 			Vector2 dir = (worldPos - (Vector2)transform.position).normalized;                  // 광선 방향
-            LayerMask mask = ~LayerMask.GetMask(tagName.player, tagName.camera);                 // 레이케스트 땅만 맞출 수 있도록 마스크 생성
+            LayerMask mask = ~LayerMask.GetMask(tagName.player, tagName.camera);                // 레이케스트 땅만 맞출 수 있도록 마스크 생성
             RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);      // 자기 위치에서 dir 방향으로 광선 발사
 
 			if (hit)
@@ -97,7 +98,10 @@ public class TestGrapplingHook : MonoBehaviour
 				// 효과음 재생
 				if (!hasPlayedAttachSound)      // 갈고리 or 적에 처음 붙었을 때
 				{
-					GameManager.Instance.audioManager.HookShootSound(0.7f); // 갈고리 발사 효과음
+					if (hit.collider.CompareTag(tagName.enemy))
+						GameManager.Instance.audioManager.HookAttachEnemySound(0.7f);
+					if (hit.collider.CompareTag(tagName.ground))
+						GameManager.Instance.audioManager.HookAttachMetalSound(0.7f);
 					hasPlayedAttachSound = true;
 				}
 
