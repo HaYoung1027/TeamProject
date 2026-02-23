@@ -89,8 +89,8 @@ public class TestGrapplingHook : MonoBehaviour
 		{
 			Vector2 worldPos = mainCam.ScreenToWorldPoint(Mouse.current.position.ReadValue());  // 월드 좌표
 			Vector2 dir = (worldPos - (Vector2)transform.position).normalized;                  // 광선 방향
-			LayerMask mask = ~LayerMask.GetMask(tagName.player);                                // 레이케스트 땅만 맞출 수 있도록 마스크 생성
-			RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);      // 자기 위치에서 dir 방향으로 광선 발사
+            LayerMask mask = ~LayerMask.GetMask(tagName.player, tagName.camera);                 // 레이케스트 땅만 맞출 수 있도록 마스크 생성
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);      // 자기 위치에서 dir 방향으로 광선 발사
 
 			if (hit)
 			{
@@ -166,7 +166,7 @@ public class TestGrapplingHook : MonoBehaviour
 		mouseScreen.z = Mathf.Abs(mainCam.transform.position.z);                        // z값 보정
 		Vector2 worldPos = mainCam.ScreenToWorldPoint(mouseScreen);                     // 월드 좌표
 		Vector2 dir = (worldPos - (Vector2)transform.position).normalized;              // 광선 방향
-		LayerMask mask = ~LayerMask.GetMask(tagName.player);                            // 레이케스트 플레이어 충돌 무시
+		LayerMask mask = ~LayerMask.GetMask(tagName.player, tagName.camera);                            // 레이케스트 플레이어 충돌 무시
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, mask);  // 자기 위치에서 dir 방향으로 광선 발사
 
 		if (isAttach)   // 훅 사용 중일 경우 선 비활성화
