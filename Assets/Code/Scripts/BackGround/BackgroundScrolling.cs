@@ -63,7 +63,7 @@ public class BackgroundScrolling : MonoBehaviour
 		}
 	}
 
-	private void FixedUpdate()
+	private void LateUpdate()
 	{
 		// 카메라가 이동한 거리 = 카메라의 현재 위치 - 시작 위치
 		distance = cameraTransform.position.x - cameraStartPosition.x;
