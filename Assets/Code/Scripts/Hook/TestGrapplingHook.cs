@@ -115,8 +115,8 @@ public class TestGrapplingHook : MonoBehaviour
 				// 땅과 부딪혔을 때
 				else if (hit.collider.CompareTag(tagName.ground))
 				{
+					// 가속도 제거 후 증가
 					Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
-					playerRb.linearVelocity = Vector3.zero;		// 가속도 제거
 
 					TestHooking hooking;
 					Vector2 destiny = hit.point;    // Raycast로 쐈을 때 충돌된 위치
