@@ -36,6 +36,8 @@ public class Globals
         public static readonly string groundCheck = "GroundCheck";
         // NPC
         public static readonly string npc = "NPC";
+        // 카메라
+        public static readonly string camera = "CameraBound";
     }
 
     // 갈고리 관련 수치값(int, float) 클래스
