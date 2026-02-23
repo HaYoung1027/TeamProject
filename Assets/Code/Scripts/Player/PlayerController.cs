@@ -401,7 +401,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         Time.timeScale = slowFactor;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
 		if (colorAdjustments != null)
-            colorAdjustments.saturation.value = -50f;
+            colorAdjustments.saturation.value = -70f;
 		if (bloom != null)
             bloom.intensity.value = 3;
         mixer.SetFloat("MasterCutoff", 1000f);   // 먹먹
