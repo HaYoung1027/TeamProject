@@ -176,9 +176,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 		else
 		{
-			float x = inputVec.x * speed * Time.deltaTime;
-			transform.Translate(x, 0, 0);
-		}
+            //float x = inputVec.x * speed * Time.deltaTime;
+            //transform.Translate(x, 0, 0);
+            rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
+        }
 	}
 
 	void HandleWalkSound()
