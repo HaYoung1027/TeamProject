@@ -384,7 +384,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			if(isPlayerSlow)
 			{
-				StopSlow();
+                isPlayerSlow = false;
+                StopSlow();
 
                 if (slowCoroutine != null)
                     StopCoroutine(slowCoroutine);
