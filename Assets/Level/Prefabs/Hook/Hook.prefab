@@ -112,7 +112,7 @@ MonoBehaviour:
   gravityForce: {x: 0, y: -50}
   dampingFactor: 0.95
   lengthChangeSpeed: 8
-  reelSpeed: 15
+  reelSpeed: 30
   segmentCnt: 0
   lineLen: 0
 --- !u!120 &-7666463445354028900
