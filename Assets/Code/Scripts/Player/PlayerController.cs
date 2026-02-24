@@ -53,14 +53,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public float slowDecreaseRate = 1f;
 	[Header("슬로우 게이지 회복 속도")]
 	public float slowRecoverRate = 0.5f;
-	[Header("슬로우 상태")]
-	public bool isSlow = false;
-
-	[Header("적들")]
-	public List<SpriteRenderer> enemySprites = new List<SpriteRenderer>();
-
-	[Header("배경들")]
-	public List<SpriteRenderer> backgroundSprites = new List<SpriteRenderer>();
+    [Header("슬로우 상태")]
+    public bool isSlow = false;
+    [Header("Shift 슬로우 상태")]
+    private bool isPlayerSlow = false;
+    [Header("데미지 슬로우 상태")]
+    private bool isDamageSlow = false;
 
 	private TestGrapplingHook grappling;
 	public Vector2 inputVec;
@@ -239,7 +237,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		damageCanvasCoroutine = StartCoroutine(ShowDamagedCanvas());
 		damagedColorCoroutine = StartCoroutine(PlayerDamagedColor());
 		slowCoroutine = StartCoroutine(CheckPlayerSlowTime());
-	}
+    }
 
 	IEnumerator PlayerDie()             // 데미지 UI 코루틴
 	{
@@ -273,10 +271,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	IEnumerator CheckPlayerSlowTime()		// 플레이어 데미지 시간 체크
 	{
-		StartSlow();
+        isPlayerSlow = false;   // Shift 슬로우 모드 해제
+        isDamageSlow = true;
+        StartSlow();
 		solihoutte.Active = true;
 		yield return new WaitForSeconds(slowTime);
-		solihoutte.Active = false;
+        isDamageSlow = false;
+        solihoutte.Active = false;
 		StopSlow();
 	}
 
@@ -350,19 +351,26 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
 		{
-			if(!isSlow)
+			if(!isPlayerSlow)
 			{
-				// 슬로우 코루틴 시작
-				slowCoroutine = StartCoroutine(CheckPlayerSlowTime());
+                // 슬로우 코루틴 시작
+                isPlayerSlow = true;
+				StartSlow();
                 Debug.Log("start slow");
 
 				solihoutte.Active = true;
 			}
-		}
+			else
+			{
+                isPlayerSlow = false;
+                solihoutte.Active = false;
+                StopSlow();
+            }
+        }
 		// 그래플링 훅 발사 시 슬로우모션 종료
 		if(grappling.isAttach)
 		{
-			if(isSlow)
+			if(isPlayerSlow)
 			{
 				StopSlow();
 
@@ -372,18 +380,26 @@ public class PlayerController : MonoBehaviour, IDamageable
                 solihoutte.Active = false;
             }
 		}
-	}
+        // 게이지 다 닳으면 플레이어 슬로우 종료
+        if (isPlayerSlow && slowGauge <= 0f)
+        {
+            isPlayerSlow = false;
+            solihoutte.Active = false;
+            StopSlow();
+        }
+    }
 
 	void UpdateSlowGauge()      // 슬로우 게이지 업데이트
 	{
         if (slowGaugeSlider == null) return;
-		if (isSlow)
+		if (isPlayerSlow)
 		{
 			slowGauge -= slowDecreaseRate * Time.unscaledDeltaTime;
 
 			if (slowGauge <= 0f)
 			{
 				slowGauge = 0f;
+				StopSlow();
 			}
 		}
 		else
@@ -393,10 +409,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 				slowGauge = slowMaxGauge;
 		}
 		slowGaugeSlider.value = slowGauge / slowMaxGauge;
-	}
+    }
     void StartSlow()    // 슬로우 효과 시작
     {
-        if (isSlow) return;
         isSlow = true;
         Time.timeScale = slowFactor;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
@@ -405,84 +420,20 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if (bloom != null)
             bloom.intensity.value = 3;
         mixer.SetFloat("MasterCutoff", 1000f);   // 먹먹
-        ApplySlowColor();
     }
 
     void StopSlow()     // 슬로우 효과 종료
 	{
-		if (!isSlow) return;
-		isSlow = false;
-		Time.timeScale = 1f;            // 시간 원래대로
+        if (isPlayerSlow || isDamageSlow)
+            return;
+        isSlow = false;
+        Time.timeScale = 1f;            // 시간 원래대로
 		Time.fixedDeltaTime = 0.02f;
         if (colorAdjustments != null)
             colorAdjustments.saturation.value = 0f;
         if (bloom != null)
             bloom.intensity.value = 0.8f;
         mixer.SetFloat("MasterCutoff", 22000f); // 원래 소리
-        ApplyNormalColor();
 	}
 
-	void ApplySlowColor()   // 슬로우 ON
-	{
-		//ApplySlowColorToPlayer();
-		//ApplySlowColorToEnemies();
-		ApplySlowColorToBackgrounds();
-	}
-
-	void ApplyNormalColor() // 슬로우 OFF
-	{
-		if (sprite)
-			sprite.color = Color.white;
-
-		foreach (var enemy in enemySprites)
-			if (enemy)
-				enemy.color = Color.white;
-
-		foreach (var bg in backgroundSprites)
-			if (bg)
-				bg.color = Color.white;
-	}
-
-	void ApplySlowColorToPlayer()
-	{
-		if (sprite)
-			sprite.color = BoostSaturation(sprite.color);
-	}
-
-	void ApplySlowColorToEnemies()
-	{
-		foreach (var enemy in enemySprites)
-			if (enemy)
-				enemy.color = BoostSaturation(enemy.color);
-	}
-
-	void ApplySlowColorToBackgrounds()
-	{
-		foreach (var bg in backgroundSprites)
-			if (bg)
-				bg.color = ReduceSaturation(bg.color);
-	}
-
-	Color BoostSaturation(Color original)
-	{
-		return original;
-	}
-
-	Color ReduceSaturation(Color original)  // 채도 감소
-	{
-		float h, s, v;
-		Color.RGBToHSV(original, out h, out s, out v);
-
-		s = 0f; // 채도 완전 제거 -> 회색 계열
-		v *= 0.6f;  // 약간 어둡게
-
-		Color c = Color.HSVToRGB(h, s, v);
-
-		// ★ 톤을 조금 더 죽여서 배경이 확실히 흐려짐
-		c.r *= 0.9f;
-		c.g *= 0.9f;
-		c.b *= 0.9f;
-
-		return c;
-	}
 }
