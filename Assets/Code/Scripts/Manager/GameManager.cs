@@ -28,6 +28,7 @@ public class GameManager : MonoSingleton<GameManager> // 싱글톤 사용
     public PlayerStatsRuntime playerStatsRuntime;
     public EnemyStatsRuntime enemyStatsRuntime;
 
+    [HideInInspector] public Vector2 spawnPoint;            // 스폰포인트 관련
     [HideInInspector] public ESCKey escKey;					// 메뉴 관련
 	[HideInInspector] public SceneReloader sceneReloader;	// 씬 관련
 
@@ -65,5 +66,15 @@ public class GameManager : MonoSingleton<GameManager> // 싱글톤 사용
 
         if (playerStatsRuntime != null)     // 플레이어 초기화
             playerStatsRuntime = new PlayerStatsRuntime(playerStats);   // 스탯 값 복제
+    }
+
+    private void Start()
+    {
+        spawnPoint = playerController.transform.position;
+    }
+
+    public void SetSpawnPoint(Vector2 pos)
+    {
+        spawnPoint = pos;
     }
 }

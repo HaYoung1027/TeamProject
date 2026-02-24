@@ -249,13 +249,25 @@ public class PlayerController : MonoBehaviour, IDamageable
 			blackCanvas.gameObject.SetActive(true);
 			GameManager.Instance.sceneReloader.SetAlpha(1f);
 			yield return new WaitForSeconds(0.5f);
-			Destroy(glitchGlobalVolume.gameObject);
-			Destroy(tvGlobalVolume.gameObject);
-			GameManager.Instance.sceneReloader.Reload();    // 씬 리로드
-		}
+            RespawnPlayer();
+            playerDieCoroutine = null;
+        }
 	}
+    void RespawnPlayer()
+    {
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.linearVelocity = Vector2.zero;
 
-	IEnumerator ShowDamagedCanvas()             // 데미지 UI 코루틴
+        transform.position = GameManager.Instance.spawnPoint;
+
+        GameManager.Instance.playerStatsRuntime.currentHP = GameManager.Instance.playerStatsRuntime.maxHP;
+
+        blackCanvas.gameObject.SetActive(false);
+
+        glitchGlobalVolume.SetActive(false);
+        tvGlobalVolume.SetActive(false);
+    }
+    IEnumerator ShowDamagedCanvas()             // 데미지 UI 코루틴
 	{
 		damagedCanvas.SetActive(true);
 		yield return new WaitForSeconds(1f);
