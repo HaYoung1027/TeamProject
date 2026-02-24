@@ -199,7 +199,9 @@ public class TestGrapplingHook : MonoBehaviour
 			else
 				lineAtoB.SetLineColor(new Color(0.18f, 0.76f, 1f));
 
-			lineAtoB.Play(transform.position, hit.point);
+			// 부딪힌 요소가 트리거가 아닐 경우만 선 그리기
+			if(!(hit.collider.CompareTag(tagName.trigger)))
+				lineAtoB.Play(transform.position, hit.point);
 		}
 		else
 			lineAtoB.Stop();
